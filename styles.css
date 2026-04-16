@@ -1224,4 +1224,41 @@ input, textarea { font: inherit; color: inherit; background: transparent; border
     .about { padding: 100px 20px; }
     .cta-section { padding: 100px 20px; }
     .footer { padding: 60px 20px 30px; }
+
+    /* Shorter marquee */
+    .marquee { padding: 22px 0; }
+    .marquee-track { gap: 30px; animation-duration: 30s; }
+    .marquee-track span { font-size: 24px; }
+    .marquee-track span:nth-child(even) { font-size: 15px; }
+}
+
+/* ========== Scroll-to-top (mobile-only) ========== */
+.scroll-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    display: none;
+    place-items: center;
+    z-index: 900;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    box-shadow: 0 10px 30px rgba(0, 240, 255, 0.35), 0 0 0 1px rgba(0, 240, 255, 0.5);
+    pointer-events: none;
+    cursor: pointer;
+}
+.scroll-top.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+.scroll-top:active { transform: translateY(0) scale(0.92); }
+
+@media (max-width: 900px), (hover: none) {
+    .scroll-top { display: grid; }
 }

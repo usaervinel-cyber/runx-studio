@@ -182,11 +182,12 @@
     statEls.forEach(el => statIO.observe(el));
 
     /* ==========================================================
-       PREVIEW HOVER — SMOOTH, CONSISTENT, NO-GLITCH
-       Single rAF loop. No CSS transitions competing with JS.
-       Entry from any side produces identical speed.
+       PREVIEW ANIMATION — desktop: hover · mobile: in-viewport
+       Single rAF loop per preview. Same speed either mode.
     ========================================================== */
     const PREVIEW_DURATION = 9000; // ms for one top→bottom sweep
+    const IS_TOUCH = window.matchMedia('(hover: none)').matches ||
+                     window.matchMedia('(max-width: 900px)').matches;
 
     document.querySelectorAll('.project-preview').forEach(wrap => {
         const img = wrap.querySelector('img');
@@ -197,29 +198,29 @@
         let active = false;
         let leavingAnim = null;
 
-        // Target & smoothed parallax values
         let mx = 0, my = 0;
         let tx = 0, ty = 0;
 
         const setPos = (percent) => {
             img.style.objectPosition = `50% ${percent.toFixed(2)}%`;
         };
-        const setTransform = (x, y, scale = 1.015) => {
+        const setTransform = (x, y, scale = IS_TOUCH ? 1 : 1.015) => {
+            if (IS_TOUCH) return; // no parallax/scale on touch
             wrap.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale})`;
         };
 
         const loop = (now) => {
             if (!active) return;
             const elapsed = now - startTime;
-            // Triangle wave: 0 → 100 → 0 across 2 × DURATION
             const phase = (elapsed % (PREVIEW_DURATION * 2)) / PREVIEW_DURATION;
             const pos = phase <= 1 ? phase : 2 - phase;
             setPos(pos * 100);
 
-            // Smooth parallax (same rate on any entry side)
-            tx += (mx - tx) * 0.08;
-            ty += (my - ty) * 0.08;
-            setTransform(tx, ty);
+            if (!IS_TOUCH) {
+                tx += (mx - tx) * 0.08;
+                ty += (my - ty) * 0.08;
+                setTransform(tx, ty);
+            }
 
             rafId = requestAnimationFrame(loop);
         };
@@ -229,42 +230,29 @@
                 cancelAnimationFrame(leavingAnim);
                 leavingAnim = null;
             }
-            // Remove any leave-only transitions so rAF updates are instant
             img.style.transition = 'filter 0.5s ease';
             wrap.style.transition = '';
         };
 
-        wrap.addEventListener('mouseenter', () => {
+        const activate = () => {
             killLeaveAnim();
-            // Always start from top — consistent regardless of entry side
             setPos(0);
             mx = 0; my = 0; tx = 0; ty = 0;
-            setTransform(0, 0);
+            if (!IS_TOUCH) setTransform(0, 0);
 
-            // Force reflow so reset is committed before loop begins
             void img.offsetHeight;
 
             active = true;
             startTime = performance.now();
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(loop);
-        });
+        };
 
-        wrap.addEventListener('mousemove', (e) => {
-            const rect = wrap.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            // Modest parallax — max ±6px
-            mx = x * 6;
-            my = y * 6;
-        });
-
-        wrap.addEventListener('mouseleave', () => {
+        const deactivate = () => {
             active = false;
             if (rafId) cancelAnimationFrame(rafId);
             rafId = null;
 
-            // Smooth ease-out back to rest using rAF (NOT CSS transition)
             const startPos = parseFloat(
                 (img.style.objectPosition || '50% 0%').split(' ')[1]
             ) || 0;
@@ -274,24 +262,62 @@
 
             const leaveTick = (now) => {
                 const t = Math.min((now - leaveStart) / LEAVE_DUR, 1);
-                const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+                const eased = 1 - Math.pow(1 - t, 3);
                 const p = startPos * (1 - eased);
-                const x = startTx * (1 - eased);
-                const y = startTy * (1 - eased);
                 setPos(p);
-                setTransform(x, y, 1.015 - 0.015 * eased);
+                if (!IS_TOUCH) {
+                    const x = startTx * (1 - eased);
+                    const y = startTy * (1 - eased);
+                    setTransform(x, y, 1.015 - 0.015 * eased);
+                }
                 if (t < 1) {
                     leavingAnim = requestAnimationFrame(leaveTick);
                 } else {
                     leavingAnim = null;
                     setPos(0);
-                    wrap.style.transform = '';
+                    if (!IS_TOUCH) wrap.style.transform = '';
                     tx = 0; ty = 0; mx = 0; my = 0;
                 }
             };
             leavingAnim = requestAnimationFrame(leaveTick);
-        });
+        };
+
+        if (IS_TOUCH) {
+            // Mobile: activate when preview is in viewport
+            const pIO = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) activate();
+                    else deactivate();
+                });
+            }, { threshold: 0.45 });
+            pIO.observe(wrap);
+        } else {
+            // Desktop: hover + mouse parallax
+            wrap.addEventListener('mouseenter', activate);
+            wrap.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                mx = x * 6;
+                my = y * 6;
+            });
+            wrap.addEventListener('mouseleave', deactivate);
+        }
     });
+
+    /* -------- SCROLL TO TOP (mobile FAB) -------- */
+    const scrollTopBtn = document.getElementById('scrollTop');
+    if (scrollTopBtn) {
+        const toggleScrollTop = () => {
+            if (window.scrollY > 400) scrollTopBtn.classList.add('is-visible');
+            else scrollTopBtn.classList.remove('is-visible');
+        };
+        window.addEventListener('scroll', toggleScrollTop, { passive: true });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        toggleScrollTop();
+    }
 
     /* -------- PROJECT MODAL -------- */
     const modal = document.getElementById('modal');
