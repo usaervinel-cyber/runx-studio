@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Original uncompressed screenshots (kept locally, too large for git)
+full screenshot all website/
+
+# Editor / tool metadata
+.claude/
+.vscode/
+.idea/
+
+# Dependencies (none currently, but reserved)
+node_modules/
+
+# Env files
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Vercel
+.vercel
+
+# Build outputs (none currently)
+dist/
+build/
