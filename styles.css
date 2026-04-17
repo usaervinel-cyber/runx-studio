@@ -162,9 +162,12 @@ input, textarea { font: inherit; color: inherit; background: transparent; border
 .loader-bar span {
     display: block;
     height: 100%;
-    width: 0%;
+    width: 100%;
     background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
     animation: loadFill 1.8s var(--ease-out) forwards;
+    will-change: transform;
 }
 .loader-count {
     margin-top: 14px;
@@ -176,7 +179,7 @@ input, textarea { font: inherit; color: inherit; background: transparent; border
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-@keyframes loadFill { to { width: 100%; } }
+@keyframes loadFill { to { transform: scaleX(1); } }
 
 /* ========== Header ========== */
 .header {
@@ -539,14 +542,16 @@ input, textarea { font: inherit; color: inherit; background: transparent; border
 .scroll-line::after {
     content: "";
     position: absolute;
-    top: -50%;
+    top: 0;
     left: 0;
     width: 100%;
     height: 50%;
     background: var(--accent);
+    transform: translateY(-100%);
     animation: scrollDot 2s linear infinite;
+    will-change: transform;
 }
-@keyframes scrollDot { to { top: 100%; } }
+@keyframes scrollDot { to { transform: translateY(200%); } }
 
 /* ========== Marquee ========== */
 .marquee {
