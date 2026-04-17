@@ -28,7 +28,8 @@
 
     function applyLang(lang) {
         currentLang = lang;
-        document.documentElement.lang = lang;
+        // BCP 47: Ukrainian is 'uk', not 'ua'
+        document.documentElement.lang = lang === 'ua' ? 'uk' : 'en';
         localStorage.setItem('runx-lang', lang);
 
         // Text swaps

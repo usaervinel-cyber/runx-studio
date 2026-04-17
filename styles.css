@@ -1100,9 +1100,10 @@ input, textarea { font: inherit; color: inherit; background: transparent; border
     grid-template-columns: repeat(3, 1fr);
     gap: 40px;
 }
-.footer-col h4 {
+.footer-col h3 {
     font-family: 'Space Mono', monospace;
     font-size: 12px;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: var(--text-dim);
