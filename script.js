@@ -26,31 +26,32 @@
     /* -------- LANGUAGE SWITCHER -------- */
     let currentLang = localStorage.getItem('runx-lang') || 'en';
 
-    function applyLang(lang) {
+    function applyLang(lang, skipTextSwap = false) {
         currentLang = lang;
-        // BCP 47: Ukrainian is 'uk', not 'ua'
-        document.documentElement.lang = lang === 'ua' ? 'uk' : 'en';
+        const htmlLang = lang === 'ua' ? 'uk' : 'en';
+        if (document.documentElement.lang !== htmlLang) {
+            document.documentElement.lang = htmlLang;
+        }
         localStorage.setItem('runx-lang', lang);
 
-        // Text swaps
-        document.querySelectorAll('[data-en]').forEach(el => {
-            if (el.id === 'heroTitle') return; // handled separately
-            const val = el.getAttribute(`data-${lang}`);
-            if (val != null) el.innerHTML = val;
-        });
+        // On initial load with default EN, HTML already contains EN text.
+        // Skip the expensive DOM traversal + innerHTML writes to cut TBT.
+        if (!skipTextSwap) {
+            document.querySelectorAll('[data-en]').forEach(el => {
+                if (el.id === 'heroTitle') return;
+                const val = el.getAttribute(`data-${lang}`);
+                if (val != null) el.innerHTML = val;
+            });
+            document.querySelectorAll('[data-en-ph]').forEach(el => {
+                const val = el.getAttribute(`data-${lang}-ph`);
+                if (val != null) el.placeholder = val;
+            });
+        }
 
-        // Placeholder swaps
-        document.querySelectorAll('[data-en-ph]').forEach(el => {
-            const val = el.getAttribute(`data-${lang}-ph`);
-            if (val != null) el.placeholder = val;
-        });
-
-        // Toggle button state
         document.querySelectorAll('[data-set-lang]').forEach(btn => {
             btn.classList.toggle('active', btn.getAttribute('data-set-lang') === lang);
         });
 
-        // Hero title — re-render with letter split
         renderHeroTitle(lang);
     }
 
@@ -82,8 +83,9 @@
         });
     });
 
-    // Apply initial language (after DOM ready)
-    applyLang(currentLang);
+    // Apply initial language (after DOM ready).
+    // HTML ships in EN — skip bulk text swap if the stored pref is EN too.
+    applyLang(currentLang, currentLang === 'en');
 
     /* -------- CUSTOM CURSOR -------- */
     const cursor = document.getElementById('cursor');
