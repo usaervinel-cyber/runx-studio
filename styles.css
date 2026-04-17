@@ -122,10 +122,13 @@ input, textarea { font: inherit; color: inherit; background: transparent; border
     position: fixed;
     top: 0; left: 0;
     height: 2px;
+    width: 100%;
     background: linear-gradient(90deg, var(--accent), var(--accent-3));
     z-index: 9998;
-    width: 0%;
-    transition: width 0.1s linear;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.1s linear;
+    will-change: transform;
 }
 
 /* ========== Loader ========== */

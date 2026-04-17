@@ -131,8 +131,8 @@
 
     const onScroll = () => {
         const h = document.documentElement;
-        const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-        progress.style.width = p + '%';
+        const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+        progress.style.transform = `scaleX(${p})`;
 
         if (h.scrollTop > 20) header.classList.add('scrolled');
         else header.classList.remove('scrolled');
