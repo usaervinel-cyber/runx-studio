@@ -10,8 +10,8 @@
     --line: rgba(255, 255, 255, 0.08);
     --line-strong: rgba(255, 255, 255, 0.14);
     --text: #F4F5FB;
-    --text-dim: #9099B0;
-    --text-muted: #5E6680;
+    --text-dim: #A4ABC2;
+    --text-muted: #8A92A9;
     --accent: #00F0FF;
     --accent-2: #FFD93D;
     --accent-3: #FF4D8D;
@@ -43,6 +43,13 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: none; border: 0; background: transparent; color: inherit; }
 input, textarea { font: inherit; color: inherit; background: transparent; border: 0; outline: 0; }
 ::selection { background: var(--accent); color: var(--bg); }
+
+*:focus { outline: none; }
+*:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
 
 /* ========== Noise ========== */
 .noise {
