@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUNX — The System Behind Growth</title>
+  <meta name="description" content="RUNX connects strategy, marketing, technology, automation, and AI into infrastructure built to help businesses grow with clarity and control.">
+  <script>
+    /* pre-paint: apply saved theme & lang to avoid flash */
+    (function () {
+      try {
+        if (localStorage.getItem('runx-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+        var l = localStorage.getItem('runx-lang');
+        if (l) document.documentElement.setAttribute('data-lang', l);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ============ LOADER ============ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <span class="loader-logo">RUNX</span>
+      <span class="loader-count" id="loaderCount">0</span>
+    </div>
+    <span class="loader-tag">GROWTH SYSTEMS — INITIALIZING</span>
+  </div>
+
+  <!-- scroll progress -->
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+  <!-- custom cursor -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- blueprint scroll HUD -->
+  <div class="scroll-hud mono" id="scrollHud" aria-hidden="true">[ <span id="hudSec">01 / HERO</span> &mdash; <span id="hudPct">000</span>% ]</div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="#" class="logo" data-hover>
+        RUNX<sup>&reg;</sup>
+      </a>
+      <p class="header-meta mono">GROWTH&nbsp;SYSTEMS&nbsp;/&nbsp;US</p>
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="#overview" data-hover><span class="mono nav-idx">01</span><span data-i18n="nav.about">About</span></a>
+        <a href="#capabilities" data-hover><span class="mono nav-idx">02</span><span data-i18n="nav.caps">Capabilities</span></a>
+        <a href="#contact" data-hover><span class="mono nav-idx">03</span><span data-i18n="nav.contact">Contact</span></a>
+      </nav>
+
+      <div class="header-controls">
+        <div class="lang-switch mono" id="langSwitch" role="group" aria-label="Language">
+          <button type="button" data-lang="en" class="is-active" data-hover>EN</button>
+          <button type="button" data-lang="ua" data-hover>UA</button>
+          <button type="button" data-lang="ru" data-hover>RU</button>
+        </div>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-hover>
+          <span id="themeIcon">&#9789;</span>
+        </button>
+      </div>
+
+      <a href="#contact" class="btn-ink magnetic header-cta" data-hover id="headerCta">
+        <span class="btn-ink-label" data-i18n="nav.cta">Start a Conversation</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" data-hover>
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-lines" aria-hidden="true"></div>
+    <span class="plus-mark pm-1" aria-hidden="true"></span>
+    <span class="plus-mark pm-2" aria-hidden="true"></span>
+    <span class="plus-mark pm-3" aria-hidden="true"></span>
+
+    <div class="hero-top">
+      <p class="hero-eyebrow mono scramble" data-i18n="hero.eyebrow" data-text="ONE COMPANY / MULTIPLE GROWTH SYSTEMS">ONE COMPANY / MULTIPLE GROWTH SYSTEMS</p>
+      <p class="hero-coord mono">[ EST. SYSTEM v1.0 — RUNXAI.COM ]</p>
+    </div>
+
+    <h1 class="hero-headline">
+      <span class="line"><span class="line-inner" data-i18n="hero.l1">GROWTH DOESN&rsquo;T</span></span>
+      <span class="line"><span class="line-inner" data-i18n="hero.l2">NEED MORE <em class="outline">CHAOS.</em></span></span>
+      <span class="line"><span class="line-inner" data-i18n="hero.l3">IT NEEDS <em class="accent">A&nbsp;SYSTEM.</em></span></span>
+    </h1>
+
+    <div class="hero-foot">
+      <p class="hero-sub" data-i18n="hero.sub">
+        RUNX connects strategy, marketing, technology, automation, and&nbsp;AI into
+        infrastructure built to help businesses grow with clarity and&nbsp;control.
+      </p>
+
+      <div class="hero-badge" aria-hidden="true">
+        <svg class="badge-svg" viewBox="0 0 120 120">
+          <defs>
+            <path id="circlePath" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/>
+          </defs>
+          <text class="badge-text">
+            <textPath href="#circlePath">RUNX GROWTH SYSTEMS &bull; MARKETING &bull; TECH &bull; AI &bull;&nbsp;</textPath>
+          </text>
+        </svg>
+        <span class="badge-arrow">&darr;</span>
+      </div>
+
+      <p class="hero-choose mono" data-i18n="hero.choose">CHOOSE WHERE YOU WANT TO GROW &nbsp;&darr;</p>
+    </div>
+
+    <!-- ============ ROUTER ============ -->
+    <div class="router" id="router">
+      <a class="route-card" href="/website" data-hover>
+        <span class="route-fill" aria-hidden="true"></span>
+        <span class="route-head">
+          <span class="route-index">01</span>
+          <span class="route-arrow" aria-hidden="true">&nearr;</span>
+        </span>
+        <span class="route-body">
+          <h2 class="route-title" data-i18n="r1.title">Websites</h2>
+          <span class="route-kicker mono" data-i18n="r1.kicker">CONVERSION-FOCUSED WEBSITES</span>
+          <span class="route-desc" data-i18n="r1.desc">Smart websites that turn attention into action — clear messaging, CRM-connected forms, AI assistants, automated lead routing.</span>
+        </span>
+        <span class="route-cta mono" data-i18n="r1.cta">EXPLORE WEBSITE SOLUTIONS</span>
+      </a>
+
+      <a class="route-card" href="https://trs.runxai.com" data-hover>
+        <span class="route-fill" aria-hidden="true"></span>
+        <span class="route-head">
+          <span class="route-index">02</span>
+          <span class="route-arrow" aria-hidden="true">&nearr;</span>
+        </span>
+        <span class="route-body">
+          <h2 class="route-title">TRS for Trucking</h2>
+          <span class="route-kicker mono" data-i18n="r2.kicker">DRIVER RECRUITING INFRASTRUCTURE</span>
+          <span class="route-desc" data-i18n="r2.desc">An end-to-end system for trucking companies: driver lead generation, AI qualification, recruiter workflows, follow-up automation, analytics.</span>
+        </span>
+        <span class="route-cta mono" data-i18n="r2.cta">EXPLORE TRS</span>
+      </a>
+
+      <a class="route-card" href="/business" data-hover>
+        <span class="route-fill" aria-hidden="true"></span>
+        <span class="route-head">
+          <span class="route-index">03</span>
+          <span class="route-arrow" aria-hidden="true">&nearr;</span>
+        </span>
+        <span class="route-body">
+          <h2 class="route-title" data-i18n="r3.title">Business Systems</h2>
+          <span class="route-kicker mono" data-i18n="r3.kicker">MARKETING, AUTOMATION &amp; CUSTOM BUILDS</span>
+          <span class="route-desc" data-i18n="r3.desc">Connected growth systems for SMBs — strategy, branding, paid media, local visibility, CRM, AI automation, custom software.</span>
+        </span>
+        <span class="route-cta mono" data-i18n="r3.cta">EXPLORE BUSINESS SYSTEMS</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ MARQUEE ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span data-i18n="marquee">MARKETING <i>&#10022;</i> TECHNOLOGY <i>&#10022;</i> AUTOMATION <i>&#10022;</i> AI <i>&#10022;</i> ONE SYSTEM <i>&#10022;</i>&nbsp;</span><span data-i18n="marquee">MARKETING <i>&#10022;</i> TECHNOLOGY <i>&#10022;</i> AUTOMATION <i>&#10022;</i> AI <i>&#10022;</i> ONE SYSTEM <i>&#10022;</i>&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ============ 02 / OVERVIEW ============ -->
+  <section class="section" id="overview">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="ov.tag" data-text="02 — WHAT IS RUNX">02 — WHAT IS RUNX</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+
+      <h2 class="statement reveal" data-i18n="ov.statement">
+        We don&rsquo;t sell disconnected services.<br>
+        We build <span class="hl">connected growth infrastructure.</span>
+      </h2>
+      <p class="lede reveal" style="--d:.1s" data-i18n="ov.lede">
+        From the first click to the final conversion, RUNX connects the customer journey
+        into one measurable system — strategy, acquisition, communication, CRM,
+        automation, and analytics.
+      </p>
+
+      <div class="principles">
+        <div class="principle reveal">
+          <span class="principle-num mono">/01</span>
+          <h3 data-i18n="p1.h">System-first</h3>
+          <p data-i18n="p1.t">Every tool works as part of a single process — not as a separate service.</p>
+        </div>
+        <div class="principle reveal" style="--d:.08s">
+          <span class="principle-num mono">/02</span>
+          <h3 data-i18n="p2.h">Built for visibility</h3>
+          <p data-i18n="p2.t">Leads, communication, stages, and results can be seen and measured.</p>
+        </div>
+        <div class="principle reveal" style="--d:.16s">
+          <span class="principle-num mono">/03</span>
+          <h3 data-i18n="p3.h">Designed to keep working</h3>
+          <p data-i18n="p3.t">The system keeps the process, data, and follow-up — even when the team changes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 / CAPABILITIES ============ -->
+  <section class="section section-caps" id="capabilities">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="caps.tag" data-text="03 — CAPABILITIES">03 — CAPABILITIES</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="caps.statement">Four disciplines.<br>One operating&nbsp;system.</h2>
+
+      <div class="caps-table">
+        <div class="cap-row reveal" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">A</span>
+          <h3 class="cap-title" data-i18n="capA.h">Growth &amp; Marketing</h3>
+          <p class="cap-desc" data-i18n="capA.t">Strategy, brand positioning, Meta &amp; Google advertising, local presence, funnels, performance analytics.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+        <div class="cap-row reveal" style="--d:.06s" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">B</span>
+          <h3 class="cap-title" data-i18n="capB.h">Development</h3>
+          <p class="cap-desc" data-i18n="capB.t">Conversion-focused websites, custom software, integrations, dashboards, operational tools.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+        <div class="cap-row reveal" style="--d:.12s" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">C</span>
+          <h3 class="cap-title" data-i18n="capC.h">Automation &amp; CRM</h3>
+          <p class="cap-desc" data-i18n="capC.t">Pipeline design, lead routing, follow-up logic, centralized data, process visibility.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+        <div class="cap-row reveal" style="--d:.18s" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">D</span>
+          <h3 class="cap-title" data-i18n="capD.h">AI Communication</h3>
+          <p class="cap-desc" data-i18n="capD.t">24/7 voice &amp; chat handling, qualification, follow-up, intelligent customer or candidate communication.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 / PROCESS (dark band) ============ -->
+  <section class="section section-ink" id="process">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="proc.tag" data-text="04 — HOW WE WORK">04 — HOW WE WORK</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="proc.statement">A clear path from<br>chaos to <span class="accent-text">control.</span></h2>
+
+      <div class="process-grid" id="processGrid">
+        <div class="process-line" aria-hidden="true"><span class="process-line-fill" id="processLineFill"></span></div>
+
+        <div class="process-step reveal">
+          <span class="step-num">01</span>
+          <h3 data-i18n="s1.h">Diagnose</h3>
+          <p data-i18n="s1.t">We map the current customer journey, recruiting flow, tools, bottlenecks, data, and business goals.</p>
+        </div>
+        <div class="process-step reveal" style="--d:.08s">
+          <span class="step-num">02</span>
+          <h3 data-i18n="s2.h">Design</h3>
+          <p data-i18n="s2.t">We define the system architecture, messaging, workflows, integrations, ownership, and success metrics.</p>
+        </div>
+        <div class="process-step reveal" style="--d:.16s">
+          <span class="step-num">03</span>
+          <h3 data-i18n="s3.h">Build</h3>
+          <p data-i18n="s3.t">We launch the connected experience — marketing, website or funnel, CRM, automation, AI, and reporting.</p>
+        </div>
+        <div class="process-step reveal" style="--d:.24s">
+          <span class="step-num">04</span>
+          <h3 data-i18n="s4.h">Optimize</h3>
+          <p data-i18n="s4.t">We measure performance, improve conversion points, reactivate data, and strengthen the system over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 / WHY RUNX ============ -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="why.tag" data-text="05 — WHY RUNX">05 — WHY RUNX</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="why.statement">The difference is <span class="hl">structural.</span></h2>
+
+      <ul class="proof-list">
+        <li class="reveal"><span class="proof-key mono">SYS/01</span><p data-i18n="pr1"><strong>System-first.</strong> We build permanent infrastructure, not temporary lead volume.</p></li>
+        <li class="reveal" style="--d:.05s"><span class="proof-key mono">VIS/02</span><p data-i18n="pr2"><strong>Full visibility.</strong> Every lead, stage, conversation, and result can be tracked.</p></li>
+        <li class="reveal" style="--d:.1s"><span class="proof-key mono">FLW/03</span><p data-i18n="pr3"><strong>Built-in follow-up.</strong> Opportunities don&rsquo;t disappear after the first missed response.</p></li>
+        <li class="reveal" style="--d:.15s"><span class="proof-key mono">OWN/04</span><p data-i18n="pr4"><strong>Client-owned data.</strong> The business keeps control of its database and history.</p></li>
+        <li class="reveal" style="--d:.2s"><span class="proof-key mono">CNT/05</span><p data-i18n="pr5"><strong>Designed for continuity.</strong> The process keeps working when campaigns or team members change.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TILTED COUNTER-MARQUEE ============ -->
+  <div class="marquee marquee--reverse marquee--tilt" aria-hidden="true">
+    <div class="marquee-track">
+      <span data-i18n="marquee2">SYSTEMS <i>&#10022;</i> NOT SERVICES <i>&#10022;</i> BUILT TO LAST <i>&#10022;</i> MEASURED <i>&#10022;</i> CONNECTED <i>&#10022;</i>&nbsp;</span><span data-i18n="marquee2">SYSTEMS <i>&#10022;</i> NOT SERVICES <i>&#10022;</i> BUILT TO LAST <i>&#10022;</i> MEASURED <i>&#10022;</i> CONNECTED <i>&#10022;</i>&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- TEAM: тимчасово знято, збережено у team-section.html (чекаємо фото/імена) -->
+
+  <!-- ============ 06 / LOCATION ============ -->
+  <section class="section section-location" id="location">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="loc.tag" data-text="06 — WHERE WE ARE">06 — WHERE WE ARE</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <!-- PLACEHOLDER: реальне місто/штат -->
+      <h2 class="statement reveal" data-i18n="loc.statement">Based in <span class="hl">[City, State]</span>.<br>Serving businesses across the United&nbsp;States.</h2>
+      <p class="lede reveal" style="--d:.1s" data-i18n="loc.lede">
+        Our team collaborates remotely and coordinates projects across strategy, marketing,
+        development, automation, and AI. On-site strategy sessions by arrangement.
+      </p>
+      <p class="location-coords mono reveal" style="--d:.16s">LAT 00.0000&deg; N &nbsp;/&nbsp; LON 00.0000&deg; W &nbsp;/&nbsp; TZ&nbsp;US</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 / CONTACT (ink) ============ -->
+  <section class="section section-ink section-contact" id="contact">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="ct.tag" data-text="07 — CONTACT">07 — CONTACT</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="ct.statement">Tell us what you want to <span class="accent-text">grow, fix, or automate.</span></h2>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-field reveal">
+            <label class="mono" for="fName" data-i18n="f.name">NAME</label>
+            <input type="text" id="fName" name="name" required autocomplete="name" placeholder="Your name" data-i18n-ph="f.namePh">
+          </div>
+          <div class="form-field reveal" style="--d:.05s">
+            <label class="mono" for="fEmail" data-i18n="f.email">WORK EMAIL</label>
+            <input type="email" id="fEmail" name="email" required autocomplete="email" placeholder="name@company.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field reveal" style="--d:.1s">
+            <label class="mono" for="fPhone" data-i18n="f.phone">PHONE — OPTIONAL</label>
+            <input type="tel" id="fPhone" name="phone" autocomplete="tel" placeholder="+1">
+          </div>
+          <div class="form-field reveal" style="--d:.15s">
+            <label class="mono" for="fInterest" data-i18n="f.interest">I&rsquo;M INTERESTED IN</label>
+            <select id="fInterest" name="interest" required>
+              <option value="" selected disabled data-i18n="f.opt0">Select a direction</option>
+              <option value="websites" data-i18n="f.opt1">Websites</option>
+              <option value="trs">TRS for Trucking</option>
+              <option value="business" data-i18n="f.opt3">Business Systems</option>
+              <option value="unsure" data-i18n="f.opt4">Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field reveal" style="--d:.2s">
+          <label class="mono" for="fMessage" data-i18n="f.message">WHAT ARE YOU TRYING TO GROW, FIX, OR AUTOMATE?</label>
+          <textarea id="fMessage" name="message" rows="3" required placeholder="A few sentences is enough." data-i18n-ph="f.messagePh"></textarea>
+        </div>
+        <button type="submit" class="btn-accent magnetic reveal" style="--d:.25s" data-hover>
+          <span data-i18n="f.submit">Start the Conversation</span>
+          <span class="btn-accent-arrow" aria-hidden="true">&rarr;</span>
+        </button>
+        <p class="form-confirmation mono" id="formConfirmation" hidden data-i18n="f.confirm">
+          &#10003; THANKS — YOUR MESSAGE IS WITH THE RIGHT RUNX TEAM. WE&rsquo;LL FOLLOW UP SHORTLY.
+        </p>
+      </form>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top">
+          <span class="footer-logo" aria-hidden="true">RUNX</span>
+        </div>
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <p class="mono" data-i18n="ft.brand">SYSTEMS BEHIND PREDICTABLE GROWTH.</p>
+          </div>
+          <nav class="footer-col" aria-label="Directions">
+            <h4 class="mono" data-i18n="ft.dir">DIRECTIONS</h4>
+            <a href="/website" data-hover data-i18n="ft.web">Websites</a>
+            <a href="https://trs.runxai.com" data-hover>TRS for Trucking</a>
+            <a href="/business" data-hover data-i18n="ft.biz">Business Systems</a>
+          </nav>
+          <nav class="footer-col" aria-label="Company">
+            <h4 class="mono" data-i18n="ft.company">COMPANY</h4>
+            <a href="#overview" data-hover data-i18n="ft.about">About</a>
+            <a href="#process" data-hover data-i18n="ft.how">How We Work</a>
+            <a href="#contact" data-hover data-i18n="ft.contactLink">Contact</a>
+          </nav>
+          <div class="footer-col">
+            <h4 class="mono" data-i18n="ft.contact">CONTACT</h4>
+            <!-- PLACEHOLDER: підтверджений email -->
+            <a href="mailto:hello@runxai.com" data-hover>hello@runxai.com</a>
+          </div>
+        </div>
+        <div class="footer-bottom mono">
+          <p>&copy; <span id="year">2026</span> RUNX. <span data-i18n="ft.rights">ALL RIGHTS RESERVED.</span></p>
+          <p><a href="#" data-hover data-i18n="ft.privacy">PRIVACY</a> &nbsp;/&nbsp; <a href="#" data-hover data-i18n="ft.terms">TERMS</a></p>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
