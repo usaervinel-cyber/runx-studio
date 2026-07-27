@@ -1,1127 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="Content-Language" content="en" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>(function(){try{var l=localStorage.getItem('runx-lang');document.documentElement.setAttribute('lang',l==='ua'?'uk':'en');}catch(e){document.documentElement.setAttribute('lang','en');}})();</script>
-    <title>RUNX — Digital Studio · Websites That Convert</title>
-    <meta name="description" content="RUNX is a Chicago-based digital studio building fast, beautiful, conversion-focused websites for US businesses since 2016." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" media="print" onload="this.media='all'" fetchpriority="low" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" /></noscript>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUNX — The System Behind Growth</title>
+  <meta name="description" content="RUNX connects strategy, marketing, technology, automation, and AI into infrastructure built to help businesses grow with clarity and control.">
+  <script>
+    /* pre-paint: apply saved theme & lang to avoid flash */
+    (function () {
+      try {
+        if (localStorage.getItem('runx-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+        var l = localStorage.getItem('runx-lang');
+        if (l) document.documentElement.setAttribute('data-lang', l);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Custom cursor -->
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-dot" id="cursorDot"></div>
 
-    <!-- Scroll progress -->
-    <div class="scroll-progress" id="scrollProgress"></div>
-
-    <!-- Loader -->
-    <div class="loader" id="loader">
-        <div class="loader-logo">
-            <svg viewBox="0 0 400 160" class="loader-svg">
-                <text x="0" y="125" class="loader-text">RUNX</text>
-            </svg>
-        </div>
-        <div class="loader-bar"><span></span></div>
-        <div class="loader-count"><span id="loaderCount">0</span>%</div>
+  <!-- ============ LOADER ============ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <span class="loader-logo">RUNX</span>
+      <span class="loader-count" id="loaderCount">0</span>
     </div>
+    <span class="loader-tag">GROWTH SYSTEMS — INITIALIZING</span>
+  </div>
 
-    <!-- Noise overlay -->
-    <div class="noise"></div>
+  <!-- scroll progress -->
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
 
-    <!-- Header -->
-    <header class="header" id="header">
-        <a href="#" class="logo" data-cursor="link" aria-label="RUNX Studio — back to top">
-            <svg viewBox="0 0 200 70" class="logo-svg" role="img" aria-hidden="true">
-                <text x="0" y="55" class="logo-text">RUNX</text>
-            </svg>
-        </a>
-        <nav class="nav">
-            <a href="#work" data-cursor="link"><span>01</span> <span data-en="Work" data-ua="Роботи">Work</span></a>
-            <a href="#about" data-cursor="link"><span>02</span> <span data-en="Studio" data-ua="Студія">Studio</span></a>
-            <a href="#process" data-cursor="link"><span>03</span> <span data-en="Process" data-ua="Процес">Process</span></a>
-            <a href="#contact" data-cursor="link"><span>04</span> <span data-en="Contact" data-ua="Контакти">Contact</span></a>
-        </nav>
-        <div class="header-right">
-            <div class="lang-switch" id="langSwitch">
-                <button data-set-lang="en" class="active">EN</button>
-                <span class="lang-divider">/</span>
-                <button data-set-lang="ua">UA</button>
-            </div>
-            <a href="#contact" class="cta-btn" data-cursor="cta">
-                <span class="cta-text">
-                    <span data-en="Let's talk" data-ua="Обговорити">Let's talk</span>
-                    <span data-en="Let's talk" data-ua="Обговорити">Let's talk</span>
-                </span>
-                <span class="cta-arrow">→</span>
-            </a>
+  <!-- custom cursor -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- blueprint scroll HUD -->
+  <div class="scroll-hud mono" id="scrollHud" aria-hidden="true">[ <span id="hudSec">01 / HERO</span> &mdash; <span id="hudPct">000</span>% ]</div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="#" class="logo" data-hover>
+        RUNX<sup>&reg;</sup>
+      </a>
+      <p class="header-meta mono">GROWTH&nbsp;SYSTEMS&nbsp;/&nbsp;US</p>
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="#overview" data-hover><span class="mono nav-idx">01</span><span data-i18n="nav.about">About</span></a>
+        <a href="#capabilities" data-hover><span class="mono nav-idx">02</span><span data-i18n="nav.caps">Capabilities</span></a>
+        <a href="#contact" data-hover><span class="mono nav-idx">03</span><span data-i18n="nav.contact">Contact</span></a>
+      </nav>
+
+      <div class="header-controls">
+        <div class="lang-switch mono" id="langSwitch" role="group" aria-label="Language">
+          <button type="button" data-lang="en" class="is-active" data-hover>EN</button>
+          <button type="button" data-lang="ua" data-hover>UA</button>
+          <button type="button" data-lang="ru" data-hover>RU</button>
         </div>
-    </header>
-
-    <main id="main">
-
-    <!-- Hero -->
-    <section class="hero" id="hero">
-        <div class="hero-grid"></div>
-        <div class="hero-gradient"></div>
-
-        <div class="hero-meta">
-            <div class="hero-meta-item">
-                <span class="dot"></span>
-                <span data-en="Accepting projects · Q2 2026" data-ua="Приймаємо проекти · Q2 2026">Accepting projects · Q2 2026</span>
-            </div>
-            <div class="hero-meta-item right">
-                <span>📍</span>
-                <span data-en="Chicago, IL · stands with 🇺🇦 Ukraine" data-ua="Чикаго, IL · підтримуємо 🇺🇦 Україну">Chicago, IL · stands with 🇺🇦 Ukraine</span>
-            </div>
-        </div>
-
-        <div class="hero-content">
-            <div class="hero-badge reveal">
-                <span>✦</span>
-                <span data-en="Digital Studio · Est. 2016" data-ua="Digital Studio · Est. 2016">Digital Studio · Est. 2016</span>
-            </div>
-            <h1 class="hero-title" id="heroTitle"
-                data-en="We build digital experiences that convert."
-                data-ua="Ми будуємо цифровий досвід що конвертує."
-                data-split="true">
-                We build digital experiences that convert.
-            </h1>
-
-            <div class="hero-sub reveal">
-                <p data-en="RUNX Inc. is a Chicago-based team of designers and developers building funnel-grade websites for businesses across the US and EU. We combine visual storytelling, Core Web Vitals speed, and a conversion-first mindset."
-                   data-ua="RUNX Inc. — команда дизайнерів і розробників з Чикаго, що будує сайти-воронки для бізнесу у США та ЄС. Ми поєднуємо візуальний сторителінг, швидкість на рівні Google Core Web Vitals та підхід, заточений під продажі.">
-                    RUNX Inc. is a Chicago-based team of designers and developers building funnel-grade websites for businesses across the US and EU. We combine visual storytelling, Core Web Vitals speed, and a conversion-first mindset.
-                </p>
-            </div>
-
-            <div class="hero-actions reveal">
-                <a href="#work" class="btn btn-primary" data-cursor="cta">
-                    <span data-en="See our work" data-ua="Переглянути кейси">See our work</span>
-                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                </a>
-                <a href="#contact" class="btn btn-ghost" data-cursor="link">
-                    <span data-en="Request a brief" data-ua="Замовити бріф">Request a brief</span>
-                </a>
-            </div>
-
-            <div class="hero-stats reveal">
-                <div class="stat">
-                    <div class="stat-num" data-count="178">0</div>
-                    <div class="stat-label" data-en="sites<br/>shipped" data-ua="запущених<br/>сайтів">sites<br/>shipped</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-num" data-count="10">0</div>
-                    <div class="stat-label" data-en="years<br/>in the game" data-ua="років<br/>у ніші">years<br/>in the game</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-num" data-count="96">0</div>
-                    <div class="stat-label" data-en="avg PageSpeed<br/>score" data-ua="середній PageSpeed<br/>score">avg PageSpeed<br/>score</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-num" data-count="100">0</div>
-                    <div class="stat-label" data-en="% custom —<br/>zero templates" data-ua="% custom —<br/>без шаблонів">% custom —<br/>zero templates</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="hero-scroll">
-            <span data-en="Scroll" data-ua="Скрол">Scroll</span>
-            <div class="scroll-line"></div>
-        </div>
-    </section>
-
-    <!-- Marquee -->
-    <section class="marquee">
-        <div class="marquee-track">
-            <span>Web Design</span><span>✦</span>
-            <span>Front-end</span><span>✦</span>
-            <span>Framer</span><span>✦</span>
-            <span>Motion</span><span>✦</span>
-            <span>SEO</span><span>✦</span>
-            <span>Brand Systems</span><span>✦</span>
-            <span>AI Integrations</span><span>✦</span>
-            <span>Since 2016</span><span>✦</span>
-            <span>Chicago · Ukraine</span><span>✦</span>
-            <span>Web Design</span><span>✦</span>
-            <span>Front-end</span><span>✦</span>
-            <span>Framer</span><span>✦</span>
-            <span>Motion</span><span>✦</span>
-            <span>SEO</span><span>✦</span>
-            <span>Brand Systems</span><span>✦</span>
-            <span>AI Integrations</span><span>✦</span>
-            <span>Since 2016</span><span>✦</span>
-            <span>Chicago · Ukraine</span><span>✦</span>
-        </div>
-    </section>
-
-    <!-- Work / Portfolio -->
-    <section class="work" id="work">
-        <div class="section-head">
-            <div class="section-label reveal">
-                <span class="label-dot"></span>
-                <span data-en="Portfolio · 2016—2026" data-ua="Портфоліо · 2016—2026">Portfolio · 2016—2026</span>
-            </div>
-            <h2 class="section-title reveal">
-                <span data-en="Selected work." data-ua="Обрані роботи.">Selected work.</span><br/>
-                <span class="italic accent" data-en="Click any piece to open." data-ua="Клац — і зсередини.">Click any piece to open.</span>
-            </h2>
-            <p class="section-desc reveal"
-               data-en="Each case has its own story — the client's problem, our approach, what actually moved the needle. Click a project to open the full-page screenshot."
-               data-ua="Кожен кейс — окрема історія: задача клієнта, наш підхід, що саме принесло результат. Натисни на проект, щоб побачити повний скрін лендінгу.">
-                Each case has its own story — the client's problem, our approach, what actually moved the needle. Click a project to open the full-page screenshot.
-            </p>
-        </div>
-
-        <div class="projects" id="projects">
-            <!-- 01 SolidPro -->
-            <article class="project" data-index="01" data-color="#FF6B35">
-                <div class="project-meta">
-                    <span class="project-num">01</span>
-                    <span class="project-year">2026</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Construction</span><span>Industrial</span><span>B2B</span>
-                        </div>
-                        <h3 class="project-title">SolidPro US</h3>
-                        <p class="project-tagline"
-                           data-en="Industrial contractors, next level"
-                           data-ua="Промислові підрядники нового рівня">Industrial contractors, next level</p>
-                        <p class="project-desc"
-                           data-en="A portfolio site for a US heavy-metal and capital construction contractor. The brief: position the company as a premium alternative to 'garage crews'. We built a photo-first landing with large case blocks, a work-volume calculator, and a dedicated bid-brief form on its own URL."
-                           data-ua="Сайт-візитка для американського підрядника з металоконструкцій та капітального будівництва. Задача — подати компанію як преміум-рівня альтернативу 'гаражним' бригадам. Зробили фото-центричний лендінг з великими блоками кейсів, калькулятором обсягу робіт і формою тендерного бріфу на окремому URL.">
-                            A portfolio site for a US heavy-metal and capital construction contractor. The brief: position the company as a premium alternative to 'garage crews'. We built a photo-first landing with large case blocks, a work-volume calculator, and a dedicated bid-brief form on its own URL.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>+240%</strong><span data-en="inbound leads" data-ua="inbound-лідів">inbound leads</span></div>
-                            <div><strong>2:40</strong><span data-en="avg session time" data-ua="сер. час сесії">avg session time</span></div>
-                            <div><strong>97</strong><span data-en="PageSpeed mobile" data-ua="PageSpeed mobile">PageSpeed mobile</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/solidpro.webp" alt="SolidPro US" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>solidpro.us</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 02 RUNX Auto -->
-            <article class="project" data-index="02" data-color="#00D9FF">
-                <div class="project-meta">
-                    <span class="project-num">02</span>
-                    <span class="project-year">2026</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Auto Broker</span><span>Marketplace</span><span>Own brand</span>
-                        </div>
-                        <h3 class="project-title">RUNX Auto</h3>
-                        <p class="project-tagline"
-                           data-en="Auto broker · any car, any US state"
-                           data-ua="Автоброкер · будь-яке авто, будь-який штат">Auto broker · any car, any US state</p>
-                        <p class="project-desc"
-                           data-en="Our flagship project. RUNX Auto is a nationwide US auto-brokerage: the client names the model and budget — we source the vehicle, negotiate, handle paperwork and logistics. The site serves two audiences: end-buyers who want a low-friction way to buy, and partner dealers sharing inventory. VIN scanner, AI chat that understands 'I need a family SUV under $40k', and a live broker-status dashboard."
-                           data-ua="Флагманський проект студії. RUNX Auto — авто-брокерський сервіс по всіх США: клієнт називає модель і бюджет — ми знаходимо, ведемо переговори, оформлюємо та привозимо машину. Сайт обслуговує дві аудиторії: кінцеві покупці й дилери-партнери. VIN-сканер, AI-чат, що розуміє «потрібен сімейний SUV до $40k», live-дашборд статусу замовлення.">
-                            Our flagship project. RUNX Auto is a nationwide US auto-brokerage: the client names the model and budget — we source the vehicle, negotiate, handle paperwork and logistics. The site serves two audiences: end-buyers who want a low-friction way to buy, and partner dealers sharing inventory. VIN scanner, AI chat that understands 'I need a family SUV under $40k', and a live broker-status dashboard.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>50 states</strong><span data-en="nationwide delivery" data-ua="доставка по США">nationwide delivery</span></div>
-                            <div><strong>1.1s</strong><span data-en="LCP on 4G" data-ua="LCP на 4G">LCP on 4G</span></div>
-                            <div><strong>AI</strong><span data-en="car-sourcing chat" data-ua="car-sourcing чат">car-sourcing chat</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/runx-auto.webp" alt="RUNX Auto" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>runxauto.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 03 Amin Fence -->
-            <article class="project" data-index="03" data-color="#8B5CF6">
-                <div class="project-meta">
-                    <span class="project-num">03</span>
-                    <span class="project-year">2026</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Home Services</span><span>Local SEO</span><span>Lead-gen</span>
-                        </div>
-                        <h3 class="project-title">Amin Fence</h3>
-                        <p class="project-tagline"
-                           data-en="Fences done right. One click = a lead."
-                           data-ua="Паркан під ключ. Один клік = заявка.">Fences done right. One click = a lead.</p>
-                        <p class="project-desc"
-                           data-en="Chicago-based fence contractor. Brief: turn the site into a lead machine. We built a single-screen quiz (material → height → footage), integrated a CRM funnel, Google Reviews API, and a real-time price calculator. Local SEO hit top-3 in 6 weeks."
-                           data-ua="Chicago-based підрядник з встановлення парканів. Задача — перетворити сайт на машину для заявок. Зробили одноекранний квіз «обери матеріал → висоту → метраж», інтегрували CRM-воронку, Google Reviews API та калькулятор ціни в реальному часі. Локальний SEO видав Top-3 за 6 тижнів.">
-                            Chicago-based fence contractor. Brief: turn the site into a lead machine. We built a single-screen quiz (material → height → footage), integrated a CRM funnel, Google Reviews API, and a real-time price calculator. Local SEO hit top-3 in 6 weeks.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>Top-3</strong><span data-en="Google Maps Pack" data-ua="Google Maps Pack">Google Maps Pack</span></div>
-                            <div><strong>$47</strong><span data-en="CPL (was $220)" data-ua="CPL (було $220)">CPL (was $220)</span></div>
-                            <div><strong>68%</strong><span data-en="quiz completion" data-ua="quiz completion">quiz completion</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/amin-fence.webp" alt="Amin Fence" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>aminfence.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 04 Renew HVAC -->
-            <article class="project" data-index="04" data-color="#10B981">
-                <div class="project-meta">
-                    <span class="project-num">04</span>
-                    <span class="project-year">2026</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>HVAC</span><span>Aurora, IL</span><span>Service biz</span>
-                        </div>
-                        <h3 class="project-title">Renew HVAC</h3>
-                        <p class="project-tagline"
-                           data-en="HVAC in Aurora, IL — before the heat hits"
-                           data-ua="HVAC в Аврорі, Іллінойс — поки не гаряче">HVAC in Aurora, IL — before the heat hits</p>
-                        <p class="project-desc"
-                           data-en="HVAC company in Aurora, Illinois — serving Chicagoland homes and businesses. Summer traffic 5× the baseline; the site has to stay up and leads have to reach a human. Sticky '24/7 Emergency' button, live dispatcher chat, trigger-based CRM routing, video testimonials. Palette: frost-blue with a cool-air focus."
-                           data-ua="HVAC-компанія в Аврорі, штат Іллінойс — обслуговує Chicagoland. Влітку трафік x5, сайт повинен вистояти, а заявки — дозвонювати до людини. Sticky-кнопка '24/7 Emergency Service', живий чат з диспетчером, trigger-нотифікації у CRM і блок з відео-відгуками клієнтів. Дизайн — морозно-блакитний, з акцентом на прохолоду.">
-                            HVAC company in Aurora, Illinois — serving Chicagoland homes and businesses. Summer traffic 5× the baseline; the site has to stay up and leads have to reach a human. Sticky '24/7 Emergency' button, live dispatcher chat, trigger-based CRM routing, video testimonials. Palette: frost-blue with a cool-air focus.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>×5</strong><span data-en="summer traffic, no outage" data-ua="summer traffic · 0 downtime">summer traffic, no outage</span></div>
-                            <div><strong>24/7</strong><span data-en="auto-routing CRM" data-ua="auto-routing CRM">auto-routing CRM</span></div>
-                            <div><strong>A+</strong><span data-en="Web Vitals score" data-ua="Web Vitals score">Web Vitals score</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/renew-hvac.webp" alt="Renew HVAC" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>renewhvac.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 05 WOW Laser -->
-            <article class="project" data-index="05" data-color="#EC4899">
-                <div class="project-meta">
-                    <span class="project-num">05</span>
-                    <span class="project-year">2026</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Beauty</span><span>Booking</span><span>Luxury</span>
-                        </div>
-                        <h3 class="project-title">WOW Laser</h3>
-                        <p class="project-tagline"
-                           data-en="Laser aesthetics that sell themselves"
-                           data-ua="Лазерна естетика, що продає сама себе">Laser aesthetics that sell themselves</p>
-                        <p class="project-desc"
-                           data-en="Medical-aesthetics clinic. The industry's biggest blocker — fear of the procedure. We built a maximally 'warm' site with real before/after sliders, cabinet video tours, short answers from the head doctor, and instant online booking. Palette: peach + cream + metal for a premium feel."
-                           data-ua="Медико-естетична клініка. Головна перешкода в ніші — страх клієнта перед процедурою. Ми зробили максимально «теплий» сайт з реальними фото до/після, відео-турами кабінетів, короткими відповідями від головного лікаря і онлайн-букінгом без реєстрації. Палітра — персик + крем + метал для відчуття преміуму.">
-                            Medical-aesthetics clinic. The industry's biggest blocker — fear of the procedure. We built a maximally 'warm' site with real before/after sliders, cabinet video tours, short answers from the head doctor, and instant online booking. Palette: peach + cream + metal for a premium feel.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>+180%</strong><span data-en="online bookings" data-ua="онлайн-записів">online bookings</span></div>
-                            <div><strong>2:14</strong><span data-en="avg time on page" data-ua="сер. час на сторінці">avg time on page</span></div>
-                            <div><strong>4.9★</strong><span data-en="post-visit rating" data-ua="post-visit rating">post-visit rating</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/wow-laser.webp" alt="WOW Laser" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>wowlaser.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 06 Ikova Tattoo -->
-            <article class="project" data-index="06" data-color="#F43F5E">
-                <div class="project-meta">
-                    <span class="project-num">06</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Tattoo</span><span>Portfolio</span><span>Editorial</span>
-                        </div>
-                        <h3 class="project-title">Ikova Tattoo</h3>
-                        <p class="project-tagline"
-                           data-en="Portfolio-magazine for a tattoo artist"
-                           data-ua="Портфоліо-журнал для тату-майстра">Portfolio-magazine for a tattoo artist</p>
-                        <p class="project-desc"
-                           data-en="Private studio in NYC. The artist wanted an illustrated publication, not just a gallery. We structured the site like a print magazine — double-spread works, typographic accents, grain texture, live interview quotes. Full keyboard navigation, MoMA-style. Booking via a premium 'request a date' instead of a calendar."
-                           data-ua="Приватна студія у Нью-Йорку. Майстер хотів не просто галерею, а ілюстроване видання. Ми побудували структуру, як у модного друкованого журналу — великі розвороти з роботами, типографічні акценти, grain-текстура, живі цитати з інтервʼю. Вся навігація — з клавіатури, як у MoMA. Букінг через преміальний «запит дати» замість календаря.">
-                            Private studio in NYC. The artist wanted an illustrated publication, not just a gallery. We structured the site like a print magazine — double-spread works, typographic accents, grain texture, live interview quotes. Full keyboard navigation, MoMA-style. Booking via a premium 'request a date' instead of a calendar.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>6 mo.</strong><span data-en="fully booked funnel" data-ua="повна запис-воронка">fully booked funnel</span></div>
-                            <div><strong>FWA</strong><span data-en="honorable mention" data-ua="Honorable номінація">honorable mention</span></div>
-                            <div><strong>kbd-nav</strong><span data-en="full keyboard control" data-ua="full keyboard control">full keyboard control</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/ikova-tattoo.webp" alt="Ikova Tattoo" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>ikovatattoo.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 07 VP Floors -->
-            <article class="project" data-index="07" data-color="#F59E0B">
-                <div class="project-meta">
-                    <span class="project-num">07</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Flooring</span><span>Home Services</span><span>Catalog</span>
-                        </div>
-                        <h3 class="project-title">VP Floors</h3>
-                        <p class="project-tagline"
-                           data-en="A floor you want to touch"
-                           data-ua="Підлога, яку хочеться торкнутися">A floor you want to touch</p>
-                        <p class="project-desc"
-                           data-en="Flooring installation and sales company. Core challenge — let the customer feel the texture without visiting the showroom. We built an interactive catalog with 3D material preview, 'try it in your room' via photo AR, and a footage calculator with automatic waste and delivery estimate."
-                           data-ua="Компанія з укладки та продажу паркету й вінілу. Ключовий виклик — дати клієнту відчути текстуру без візиту в шоурум. Зробили інтерактивний каталог з 3D-превʼю матеріалу, функцію «приміряти у своїй кімнаті» через фото, і калькулятор метражу з автоматичним обрахунком витрати + доставки.">
-                            Flooring installation and sales company. Core challenge — let the customer feel the texture without visiting the showroom. We built an interactive catalog with 3D material preview, 'try it in your room' via photo AR, and a footage calculator with automatic waste and delivery estimate.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>3D preview</strong><span data-en="60+ materials" data-ua="60+ матеріалів">60+ materials</span></div>
-                            <div><strong>−40%</strong><span data-en="showroom visits, +58% online" data-ua="живі візити, +58% online">showroom visits, +58% online</span></div>
-                            <div><strong>AR</strong><span data-en="room-fit feature" data-ua="room-fit feature">room-fit feature</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/vp-floors.webp" alt="VP Floors" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>vpfloors.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 08 P&C Titan -->
-            <article class="project" data-index="08" data-color="#3B82F6">
-                <div class="project-meta">
-                    <span class="project-num">08</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Freight</span><span>Brokerage</span><span>Chicago</span>
-                        </div>
-                        <h3 class="project-title">P&amp;C Titan</h3>
-                        <p class="project-tagline"
-                           data-en="General freight broker · Chicago"
-                           data-ua="Фрейт-брокер · Чикаго">General freight broker · Chicago</p>
-                        <p class="project-desc"
-                           data-en="Chicago-based freight brokerage connecting shippers with carriers across the US. Over 10 years in the industry. The site serves three audiences in parallel — shippers requesting an intro consultation, carriers looking for lanes, and affiliate partners earning commissions on referrals. Dark cinematic hero with real fleet footage, an affiliate sign-up split out from the main CTA, and an About flow that builds trust fast."
-                           data-ua="Фрейт-брокерська компанія з Чикаго, що звʼязує вантажовідправників з перевізниками по всіх США. Понад 10 років у ніші. Сайт обслуговує три аудиторії одночасно — shippers беруть intro-консультацію, carriers шукають lane-заявки, affiliate-партнери заробляють комісії з рефералів. Темний cinematic hero з реальним відео флоту, окремий affiliate sign-up від головного CTA та About-flow, який швидко будує довіру.">
-                            Chicago-based freight brokerage connecting shippers with carriers across the US. Over 10 years in the industry. The site serves three audiences in parallel — shippers requesting an intro consultation, carriers looking for lanes, and affiliate partners earning commissions on referrals. Dark cinematic hero with real fleet footage, an affiliate sign-up split out from the main CTA, and an About flow that builds trust fast.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>10+ yrs</strong><span data-en="industry experience" data-ua="досвід у ніші">industry experience</span></div>
-                            <div><strong>Affiliate</strong><span data-en="partner program live" data-ua="партнерська програма">partner program live</span></div>
-                            <div><strong>Intro call</strong><span data-en="enterprise shipper flow" data-ua="flow для enterprise">enterprise shipper flow</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/pctitan.webp" alt="P&C Titan Freight" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>pctitaninc.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 09 MIRA Clean -->
-            <article class="project" data-index="09" data-color="#06B6D4">
-                <div class="project-meta">
-                    <span class="project-num">09</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Cleaning</span><span>Berlin</span><span>Booking</span>
-                        </div>
-                        <h3 class="project-title">MIRA Clean</h3>
-                        <p class="project-tagline"
-                           data-en="Professional cleaning service in Berlin"
-                           data-ua="Професійний клінінг-сервіс у Берліні">Professional cleaning service in Berlin</p>
-                        <p class="project-desc"
-                           data-en="Cleaning service operating in Berlin and surrounding areas — private homes and commercial contracts. Hero messaging built around trust: eco-friendly products, verified staff, hourly or flat-rate pricing. Online booking with a cleaning-cost calculator (98% estimate accuracy), WhatsApp and Telegram one-tap contact, green-minimal palette to signal freshness."
-                           data-ua="Клінінг-сервіс у Берліні та передмісті — приватні будинки й комерційні контракти. Комунікація побудована навколо довіри: еко-засоби, перевірений персонал, погодинна або фіксована ціна. Онлайн-букінг з калькулятором вартості (точність 98%), WhatsApp та Telegram-контакт в один тап, зелено-мінімалістична палітра для відчуття свіжості.">
-                            Cleaning service operating in Berlin and surrounding areas — private homes and commercial contracts. Hero messaging built around trust: eco-friendly products, verified staff, hourly or flat-rate pricing. Online booking with a cleaning-cost calculator (98% estimate accuracy), WhatsApp and Telegram one-tap contact, green-minimal palette to signal freshness.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>98%</strong><span data-en="calculator accuracy" data-ua="точність калькулятора">calculator accuracy</span></div>
-                            <div><strong>Eco</strong><span data-en="certified products" data-ua="еко-сертифіковані засоби">certified products</span></div>
-                            <div><strong>1-tap</strong><span data-en="messenger contact" data-ua="messenger-контакт">messenger contact</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/mira-clean.webp" alt="MIRA Clean" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>mira-clean.de</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 10 Billionaire Limo (merged) -->
-            <article class="project" data-index="10" data-color="#FBBF24">
-                <div class="project-meta">
-                    <span class="project-num">10</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Luxury</span><span>Transport</span><span>Booking</span>
-                        </div>
-                        <h3 class="project-title">Billionaire Limo</h3>
-                        <p class="project-tagline"
-                           data-en="Premium-class limousine service"
-                           data-ua="Лімузин-сервіс преміум-класу">Premium-class limousine service</p>
-                        <p class="project-desc"
-                           data-en="Chicago-based limousine transfers. Target: high-net-worth, weddings, corporate VIPs. Dark luxury design with gold accents, a 360° fleet gallery, online booking with Google Maps route pricing, a separate 'Elite tier' for NDA-contract clients, and cinematic per-vehicle pages with a HUD-style spec reader."
-                           data-ua="Компанія лімузин-трансферів у Чикаго. Цільова аудиторія — хайнет, weddings, корпоративні VIP. Темний лакшері-дизайн з золотими акцентами, галерея флоту з 360°-обертанням, онлайн-букінг з розрахунком по маршруту Google Maps, окремий 'Elite tier' для клієнтів з NDA-контрактом та cinematic-сторінки на кожне авто з HUD-інтерфейсом характеристик.">
-                            Chicago-based limousine transfers. Target: high-net-worth, weddings, corporate VIPs. Dark luxury design with gold accents, a 360° fleet gallery, online booking with Google Maps route pricing, a separate 'Elite tier' for NDA-contract clients, and cinematic per-vehicle pages with a HUD-style spec reader.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>360°</strong><span data-en="fleet viewer" data-ua="fleet viewer">fleet viewer</span></div>
-                            <div><strong>NDA tier</strong><span data-en="hidden VIP booking" data-ua="приховане VIP-бронювання">hidden VIP booking</span></div>
-                            <div><strong>+3 cities</strong><span data-en="expansion in 4 mo." data-ua="експансія за 4 міс">expansion in 4 mo.</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/billionaire-limo.webp" alt="Billionaire Limo" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>billionairelimo.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 11 Alliance HR -->
-            <article class="project" data-index="11" data-color="#6366F1">
-                <div class="project-meta">
-                    <span class="project-num">11</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>HR Tech</span><span>Recruiting</span><span>B2B</span>
-                        </div>
-                        <h3 class="project-title">Alliance HR</h3>
-                        <p class="project-tagline"
-                           data-en="HR agency for tech companies"
-                           data-ua="HR-агенція для tech-компаній">HR agency for tech companies</p>
-                        <p class="project-desc"
-                           data-en="Recruiting agency closing senior roles at fintech and AI startups. Instead of 'your people partner' — we built a dashboard-style site: case studies with placement graphs, a live '47 roles open right now' counter, a filtered CV database behind an NDA gate, a 4-step quick-brief form for hiring managers."
-                           data-ua="Рекрутингова агенція, що закриває senior-позиції у fintech та AI-стартапах. Замість «ваш кадровий партнер» — зробили сайт-дашборд: кейси з графіками закриття вакансій, live-лічильник «зараз шукаємо 47 ролей», фільтрована база CV з NDA-gate, форма швидкого бріфу для hiring-manager на 4 кроки.">
-                            Recruiting agency closing senior roles at fintech and AI startups. Instead of 'your people partner' — we built a dashboard-style site: case studies with placement graphs, a live '47 roles open right now' counter, a filtered CV database behind an NDA gate, a 4-step quick-brief form for hiring managers.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>47 roles</strong><span data-en="live openings" data-ua="live-вакансії">live openings</span></div>
-                            <div><strong>4 steps</strong><span data-en="hiring brief form" data-ua="hiring brief form">hiring brief form</span></div>
-                            <div><strong>NDA-gate</strong><span data-en="CV access control" data-ua="CV access control">CV access control</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/alliance-hr.webp" alt="Alliance HR" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>alliance-hr.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 12 Renasansce -->
-            <article class="project" data-index="12" data-color="#A855F7">
-                <div class="project-meta">
-                    <span class="project-num">12</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Trichology</span><span>Hair clinic</span><span>Medical beauty</span>
-                        </div>
-                        <h3 class="project-title">Renasansce</h3>
-                        <p class="project-tagline"
-                           data-en="Trichology center · full-spectrum hair care"
-                           data-ua="Трихологічний центр · повний спектр процедур">Trichology center · full-spectrum hair care</p>
-                        <p class="project-desc"
-                           data-en="A trichology center offering the full range of hair procedures — diagnostics, PRP, mesotherapy, laser stimulation, transplant consulting. The challenge was reframing hair loss from a 'cosmetic issue' into medical care people aren't afraid to seek. Clinical hero, doctor-led editorial pages that explain each procedure in plain language, a personal diagnostic quiz (scalp type → concern → program), and a booking flow that routes patients to the right specialist."
-                           data-ua="Трихологічний центр з повним спектром процедур для волосся — діагностика, PRP, мезотерапія, лазерна стимуляція, консультації з пересадки. Виклик — переформатувати випадіння волосся з «косметичної проблеми» у медичний догляд, якого людям не соромно шукати. Клінічний hero, редакторські сторінки від лікарів з поясненням кожної процедури простою мовою, персональний діагностичний квіз (тип шкіри голови → проблема → програма) та booking flow, що роутить пацієнта до потрібного спеціаліста.">
-                            A trichology center offering the full range of hair procedures — diagnostics, PRP, mesotherapy, laser stimulation, transplant consulting. The challenge was reframing hair loss from a 'cosmetic issue' into medical care people aren't afraid to seek. Clinical hero, doctor-led editorial pages that explain each procedure in plain language, a personal diagnostic quiz (scalp type → concern → program), and a booking flow that routes patients to the right specialist.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>Full spectrum</strong><span data-en="all hair procedures" data-ua="всі процедури">all hair procedures</span></div>
-                            <div><strong>Diagnostic</strong><span data-en="quiz → specialist routing" data-ua="квіз → routing до лікаря">quiz → specialist routing</span></div>
-                            <div><strong>Doctor-led</strong><span data-en="editorial procedure pages" data-ua="редакторські сторінки від лікарів">editorial procedure pages</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/renasansce.webp" alt="Renasansce" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>renasansce.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 13 Everwood -->
-            <article class="project" data-index="13" data-color="#84CC16">
-                <div class="project-meta">
-                    <span class="project-num">13</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Lumber</span><span>Supply chain</span><span>B2B catalog</span>
-                        </div>
-                        <h3 class="project-title">Everwood Supply</h3>
-                        <p class="project-tagline"
-                           data-en="Premium lumber supply"
-                           data-ua="Преміальне постачання деревини">Premium lumber supply</p>
-                        <p class="project-desc"
-                           data-en="Wholesale premium lumber supplier for contractors. B2B-first ask: fast quote, ability to build a 'cart' of batch requirements, API into the contractor's CRM. We layered in educational long-reads about wood species, drying grades, standards. Buildertrend and QuickBooks integration."
-                           data-ua="Оптовий постачальник премʼюм-пиломатеріалів для підрядників. Тут був саме B2B-запит: швидкий quote, можливість скласти «кошик» з вимогами до партії, API до CRM підрядника. Додали шар — образовий лонгрід про породи дерева, сорти висушки, стандарти. Інтеграція з Buildertrend та QuickBooks.">
-                            Wholesale premium lumber supplier for contractors. B2B-first ask: fast quote, ability to build a 'cart' of batch requirements, API into the contractor's CRM. We layered in educational long-reads about wood species, drying grades, standards. Buildertrend and QuickBooks integration.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>Buildertrend</strong><span data-en="direct API sync" data-ua="direct API sync">direct API sync</span></div>
-                            <div><strong>+$1.4M</strong><span data-en="GMV Q1" data-ua="GMV Q1">GMV Q1</span></div>
-                            <div><strong>long-reads</strong><span data-en="SEO traffic ×3" data-ua="SEO traffic ×3">SEO traffic ×3</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/everwood-supply.webp" alt="Everwood Supply" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>everwoodsupply.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 14 BPA Hot Shot -->
-            <article class="project" data-index="14" data-color="#EF4444">
-                <div class="project-meta">
-                    <span class="project-num">14</span>
-                    <span class="project-year">2025</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Trucking</span><span>Hot Shot</span><span>Logistics</span>
-                        </div>
-                        <h3 class="project-title">BPA Hot Shot</h3>
-                        <p class="project-tagline"
-                           data-en="Hot-shot delivery across the US · 24/7"
-                           data-ua="Hot shot доставка по США · 24/7">Hot-shot delivery across the US · 24/7</p>
-                        <p class="project-desc"
-                           data-en="Hot-shot express logistics — urgent deliveries on pickup trucks. A quote-focused site: big 'from/to/weight' calculator, live map of available drivers, instant quote, DOT-compliance block for oil-and-gas clients. The trick — dispatcher chat directly inside the funnel, no phone handoff."
-                           data-ua="Компанія експрес-логістики «hot shot» — термінові перевезення на pickup-траках. Сайт-заявка: величезний калькулятор «звідки/куди/вага», live-карта вільних водіїв, моментальний quote, DOT-compliance-блок для клієнтів у нафтогазі. Ключова фішка — чат з disp-офісом прямо у воронці, без переходу на phone.">
-                            Hot-shot express logistics — urgent deliveries on pickup trucks. A quote-focused site: big 'from/to/weight' calculator, live map of available drivers, instant quote, DOT-compliance block for oil-and-gas clients. The trick — dispatcher chat directly inside the funnel, no phone handoff.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>live map</strong><span data-en="truck availability" data-ua="truck availability">truck availability</span></div>
-                            <div><strong>DOT ready</strong><span data-en="compliance block" data-ua="compliance-block">compliance block</span></div>
-                            <div><strong>instant</strong><span data-en="quote <45s" data-ua="quote <45с">quote <45s</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/bpa-hotshot.webp" alt="BPA Hot Shot" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>bpahotshot.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 15 Uniquality -->
-            <article class="project" data-index="15" data-color="#0EA5E9">
-                <div class="project-meta">
-                    <span class="project-num">15</span>
-                    <span class="project-year">2024</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Truck Repair</span><span>Pennsylvania</span><span>Service</span>
-                        </div>
-                        <h3 class="project-title">Uniquality</h3>
-                        <p class="project-tagline"
-                           data-en="Truck repair shop in Pennsylvania"
-                           data-ua="Майстерня ремонту вантажівок у Пенсильванії">Truck repair shop in Pennsylvania</p>
-                        <p class="project-desc"
-                           data-en="A busy truck repair shop in Pennsylvania serving long-haul drivers on the I-80 corridor. The problem: drivers need to know bay availability and ETA right now — from the cab. We built a mobile-first site with one-tap call, a live 'is the bay open?' widget, services grouped by rig type, and an after-hours emergency contact flow."
-                           data-ua="Завантажена майстерня з ремонту вантажівок у Пенсильванії, що обслуговує далекобійників на коридорі I-80. Проблема: водіям потрібно знати вільний бокс та ETA просто зараз — з кабіни. Зробили mobile-first сайт з one-tap дзвінком, live-віджетом «чи вільний бокс», послугами за типом вантажівки та флоу екстреного контакту вночі.">
-                            A busy truck repair shop in Pennsylvania serving long-haul drivers on the I-80 corridor. The problem: drivers need to know bay availability and ETA right now — from the cab. We built a mobile-first site with one-tap call, a live 'is the bay open?' widget, services grouped by rig type, and an after-hours emergency contact flow.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>Mobile-first</strong><span data-en="built for drivers in cab" data-ua="для водіїв з кабіни">built for drivers in cab</span></div>
-                            <div><strong>Live</strong><span data-en="bay availability widget" data-ua="віджет вільних боксів">bay availability widget</span></div>
-                            <div><strong>I-80</strong><span data-en="corridor SEO focus" data-ua="SEO на коридор I-80">corridor SEO focus</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/uniquality.webp" alt="Uniquality" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>wimmb.github.io/uniquality</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 16 Scorpio -->
-            <article class="project" data-index="16" data-color="#14B8A6">
-                <div class="project-meta">
-                    <span class="project-num">16</span>
-                    <span class="project-year">2024</span>
-                </div>
-                <div class="project-body reverse">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Trucking</span><span>Fleet</span><span>Logistics</span>
-                        </div>
-                        <h3 class="project-title">Scorpio Services</h3>
-                        <p class="project-tagline"
-                           data-en="Driven trucking company"
-                           data-ua="Driven тракінг-компанія">Driven trucking company</p>
-                        <p class="project-desc"
-                           data-en="A growing US trucking company specializing in dry van and reefer freight. We built a site that serves three audiences at once — shippers getting an instant quote, drivers joining the fleet, and dispatchers tracking loads in real time. Load-board integration, live fleet map, and a driver-hiring funnel with a CDL verification step."
-                           data-ua="Тракінгова компанія в США, що спеціалізується на dry van та reefer вантажах. Ми побудували сайт, який одночасно обслуговує три аудиторії — вантажовідправники отримують миттєвий quote, водії приєднуються до флоту, диспетчери відстежують рейси в реальному часі. Інтеграція з load-board, live-карта флоту та hiring-воронка для водіїв з CDL-перевіркою.">
-                            A growing US trucking company specializing in dry van and reefer freight. We built a site that serves three audiences at once — shippers getting an instant quote, drivers joining the fleet, and dispatchers tracking loads in real time. Load-board integration, live fleet map, and a driver-hiring funnel with a CDL verification step.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>3 audiences</strong><span data-en="shippers · drivers · dispatch" data-ua="shippers · drivers · dispatch">shippers · drivers · dispatch</span></div>
-                            <div><strong>CDL</strong><span data-en="verified hiring flow" data-ua="CDL-перевірка у hiring">verified hiring flow</span></div>
-                            <div><strong>Live map</strong><span data-en="fleet tracking" data-ua="fleet tracking">fleet tracking</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/scorpio-services.webp" alt="Scorpio Services" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>scorpio-services.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 17 Cozy Basement -->
-            <article class="project" data-index="17" data-color="#FB923C">
-                <div class="project-meta">
-                    <span class="project-num">17</span>
-                    <span class="project-year">2024</span>
-                </div>
-                <div class="project-body">
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span>Remodeling</span><span>Basement</span><span>Before/After</span>
-                        </div>
-                        <h3 class="project-title">Cozy Basement</h3>
-                        <p class="project-tagline"
-                           data-en="Turning basements into luxury living"
-                           data-ua="Перетворюємо підвали на люксове приміщення">Turning basements into luxury living</p>
-                        <p class="project-desc"
-                           data-en="Specialized basement-to-living-space remodeling company. We leaned into emotional storytelling: large before/after sliders with real clients, their 'why we did it' video interviews, a 3D planner to 'see your basement', and a finance calculator with installment options."
-                           data-ua="Спеціалізована компанія з переобладнання підвалів під living-space. Ми поставили акцент на emotional storytelling: великі before/after слайдери з реальними клієнтами, їхні відео-інтервʼю «чому ми це зробили», 3D-планувальник «подивись на свій підвал» та фінансовий калькулятор з варіантами розстрочки.">
-                            Specialized basement-to-living-space remodeling company. We leaned into emotional storytelling: large before/after sliders with real clients, their 'why we did it' video interviews, a 3D planner to 'see your basement', and a finance calculator with installment options.
-                        </p>
-                        <div class="project-impact">
-                            <div><strong>3D planner</strong><span data-en="basement visualizer" data-ua="basement visualizer">basement visualizer</span></div>
-                            <div><strong>+312%</strong><span data-en="quote-request submits" data-ua="quote-request submits">quote-request submits</span></div>
-                            <div><strong>5 cities</strong><span data-en="expansion in a year" data-ua="експансія за рік">expansion in a year</span></div>
-                        </div>
-                        <button class="project-open" data-cursor="cta">
-                            <span data-en="Open full screenshot" data-ua="Відкрити повний скрін">Open full screenshot</span>
-                            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        </button>
-                    </div>
-                    <div class="project-preview" data-cursor="view">
-                        <div class="preview-wrap">
-                            <img decoding="async" src="images/cozy-basement.webp" alt="Cozy Basement" loading="lazy" />
-                        </div>
-                        <div class="preview-label">
-                            <span>cozybasement.com</span>
-                            <span data-en="→ Open case" data-ua="→ Відкрити">→ Open case</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- About -->
-    <section class="about" id="about">
-        <div class="about-inner">
-            <div class="about-label reveal">
-                <span class="label-dot"></span>
-                <span data-en="About the studio" data-ua="Про студію">About the studio</span>
-            </div>
-            <h2 class="about-title reveal">
-                <span data-en="We build websites you're" data-ua="Ми робимо сайти, які">We build websites you're</span>
-                <span class="italic accent" data-en="not ashamed" data-ua="не соромно">not ashamed</span>
-                <span data-en="to show a partner," data-ua="показати партнеру,">to show a partner,</span>
-                <br/>
-                <span data-en="an investor, and your own mom." data-ua="інвестору й власній мамі.">an investor, and your own mom.</span>
-            </h2>
-            <div class="about-grid">
-                <div class="about-col reveal">
-                    <h3 data-en="Who we are" data-ua="Хто ми">Who we are</h3>
-                    <p data-en="A team of 32+ — designers, developers, strategists, marketers, AI specialists, product and project managers. Founded in 2016 around a simple idea: the web should work. No templates, no 'done in three days', no 'it's impossible'."
-                       data-ua="Команда з понад 32 людей — дизайнери, розробники, стратеги, маркетологи, AI-спеціалісти, продукт- та проджект-менеджери. Заснована у 2016 навколо простої ідеї: веб повинен працювати. Без шаблонів, без «зроблю за три дні», без «це не можна».">
-                        A team of 32+ — designers, developers, strategists, marketers, AI specialists, product and project managers. Founded in 2016 around a simple idea: the web should work. No templates, no 'done in three days', no 'it's impossible'.
-                    </p>
-                </div>
-                <div class="about-col reveal">
-                    <h3 data-en="How we work" data-ua="Як працюємо">How we work</h3>
-                    <p data-en="Strict fixed-scope contracts with a deadline. Weekly check-ins on Loom. Full access to Figma and the repo. The client knows what's happening every day of the week. No black boxes."
-                       data-ua="Стриктно fixed-scope контракти з дедлайном. Weekly check-ins у Loom. Повний доступ до Figma і репо. Клієнт знає, що відбувається, кожного дня тижня. Ніяких «чорних ящиків».">
-                        Strict fixed-scope contracts with a deadline. Weekly check-ins on Loom. Full access to Figma and the repo. The client knows what's happening every day of the week. No black boxes.
-                    </p>
-                </div>
-                <div class="about-col reveal">
-                    <h3 data-en="Stack" data-ua="Стек">Stack</h3>
-                    <p data-en="Next.js · React · Framer Motion · GSAP · Three.js · Sanity · Framer · Tailwind · Vercel · Cloudflare · Figma · After Effects · Runway ML."
-                       data-ua="Next.js · React · Framer Motion · GSAP · Three.js · Sanity · Framer · Tailwind · Vercel · Cloudflare · Figma · After Effects · Runway ML.">
-                        Next.js · React · Framer Motion · GSAP · Three.js · Sanity · Framer · Tailwind · Vercel · Cloudflare · Figma · After Effects · Runway ML.
-                    </p>
-                </div>
-                <div class="about-col reveal">
-                    <h3 data-en="What we don't do" data-ua="Що не робимо">What we don't do</h3>
-                    <p data-en="Templates. WordPress on Elementor. 'SEO-stuffing' for search engines. Work for pizza. Projects where the only KPI is 'just have one'. If the site has no goal — we'd both be sad together."
-                       data-ua="Шаблони. WordPress на Elementor. «SEO-заглушки» для пошукових машин. Роботи за порцію піцци. Проекти де єдиний KPI — «щоб був». Якщо сайт не має мети — нам разом буде сумно.">
-                        Templates. WordPress on Elementor. 'SEO-stuffing' for search engines. Work for pizza. Projects where the only KPI is 'just have one'. If the site has no goal — we'd both be sad together.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Process -->
-    <section class="process" id="process">
-        <div class="section-head">
-            <div class="section-label reveal">
-                <span class="label-dot"></span>
-                <span data-en="Process · 04 steps" data-ua="Процес · 04 кроки">Process · 04 steps</span>
-            </div>
-            <h2 class="section-title reveal">
-                <span data-en="From first call" data-ua="Від першого дзвінка">From first call</span><br/>
-                <span class="italic accent" data-en="to launch — 7–14 days." data-ua="до запуску — 7–14 днів.">to launch — 7–14 days.</span>
-            </h2>
-        </div>
-        <div class="steps">
-            <div class="step reveal">
-                <div class="step-num">01</div>
-                <h3 data-en="Brief &amp; Strategy" data-ua="Бріф &amp; Стратегія">Brief &amp; Strategy</h3>
-                <p data-en="A 60-minute call plus a questionnaire. We walk out with an understanding of your audience, competitors, and KPIs. You get a PDF brief with site architecture and behavior scenarios."
-                   data-ua="60-хвилинний дзвінок + опитувальник. Виходимо з розумінням аудиторії, конкурентів, KPI. Ви отримуєте PDF-brief з архітектурою сайту та сценаріями поведінки.">
-                    A 60-minute call plus a questionnaire. We walk out with an understanding of your audience, competitors, and KPIs. You get a PDF brief with site architecture and behavior scenarios.
-                </p>
-                <span class="step-time" data-en="3—5 days" data-ua="3—5 днів">3—5 days</span>
-            </div>
-            <div class="step reveal">
-                <div class="step-num">02</div>
-                <h3 data-en="UX + Moodboard" data-ua="UX + Moodboard">UX + Moodboard</h3>
-                <p data-en="Wireframes in Figma plus three visual directions. We pick together. We show references and explain why this particular rhythm will work for your segment."
-                   data-ua="Wireframes у Figma + три варіанти напрямку візуалу. Обираємо разом. Показуємо референси й пояснюємо, чому саме цей ритм працюватиме для вашого сегменту.">
-                    Wireframes in Figma plus three visual directions. We pick together. We show references and explain why this particular rhythm will work for your segment.
-                </p>
-                <span class="step-time" data-en="5—7 days" data-ua="5—7 днів">5—7 days</span>
-            </div>
-            <div class="step reveal">
-                <div class="step-num">03</div>
-                <h3 data-en="Design + Animation" data-ua="Design + Animation">Design + Animation</h3>
-                <p data-en="Final design in Figma, motion prototype in Framer. We show every interactive state before development — you know exactly what you'll get."
-                   data-ua="Фінальний дизайн у Figma, motion-прототип у Framer. Всі інтерактивні стани показуємо до розробки — ви точно знаєте, що отримаєте.">
-                    Final design in Figma, motion prototype in Framer. We show every interactive state before development — you know exactly what you'll get.
-                </p>
-                <span class="step-time" data-en="2—3 weeks" data-ua="2—3 тижні">2—3 weeks</span>
-            </div>
-            <div class="step reveal">
-                <div class="step-num">04</div>
-                <h3 data-en="Dev &amp; Launch" data-ua="Dev &amp; Launch">Dev &amp; Launch</h3>
-                <p data-en="Development, integrations (CRM, Analytics, forms), real-device QA, SEO basics. Full ongoing support after launch on a monthly subscription — updates, fixes, growth experiments."
-                   data-ua="Розробка, інтеграції (CRM, Analytics, forms), QA на реальних пристроях, SEO-баз. Повний супровід після запуску на щомісячній підписці — оновлення, фікси, growth-експерименти.">
-                    Development, integrations (CRM, Analytics, forms), real-device QA, SEO basics. Full ongoing support after launch on a monthly subscription — updates, fixes, growth experiments.
-                </p>
-                <span class="step-time" data-en="1—2 weeks" data-ua="1—2 тижні">1—2 weeks</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section" id="contact">
-        <div class="cta-bg"></div>
-        <div class="cta-inner">
-            <div class="cta-label reveal">
-                <span class="label-dot"></span>
-                <span data-en="Let's start" data-ua="Почнімо">Let's start</span>
-            </div>
-            <h2 class="cta-title reveal">
-                <span data-en="Got an" data-ua="Маєш">Got an</span>
-                <span class="italic accent" data-en="idea?" data-ua="ідею?">idea?</span><br/>
-                <span data-en="We've got time, coffee," data-ua="У нас є час, кава">We've got time, coffee,</span><br/>
-                <span data-en="and 40 hours a week." data-ua="і 40 годин на тиждень.">and 40 hours a week.</span>
-            </h2>
-            <p class="cta-sub reveal"
-               data-en="Tell us about your project — within 24 hours we'll send back a proposed structure, timeline, and budget range. Free, no sales pressure."
-               data-ua="Розкажи про проект — за 24 години напишемо з пропозицією структури, таймлайну і вилки бюджету. Безкоштовно, без «продажів».">
-                Tell us about your project — within 24 hours we'll send back a proposed structure, timeline, and budget range. Free, no sales pressure.
-            </p>
-            <form class="cta-form reveal" id="contactForm">
-                <div class="form-row">
-                    <label>
-                        <span data-en="Your name" data-ua="Як звати?">Your name</span>
-                        <input type="text" name="name" required data-en-ph="John Doe" data-ua-ph="Ваше імʼя" placeholder="John Doe" />
-                    </label>
-                    <label>
-                        <span data-en="Email or Telegram" data-ua="Email або Telegram">Email or Telegram</span>
-                        <input type="text" name="contact" required data-en-ph="hello@... or @username" data-ua-ph="hello@... або @username" placeholder="hello@... or @username" />
-                    </label>
-                </div>
-                <label>
-                    <span data-en="Budget" data-ua="Бюджет">Budget</span>
-                    <div class="chip-group">
-                        <input type="radio" name="budget" id="b1" value="3-7k" />
-                        <label for="b1">$3—7k</label>
-                        <input type="radio" name="budget" id="b2" value="7-15k" />
-                        <label for="b2">$7—15k</label>
-                        <input type="radio" name="budget" id="b3" value="15-30k" />
-                        <label for="b3">$15—30k</label>
-                        <input type="radio" name="budget" id="b4" value="30k+" />
-                        <label for="b4">$30k+</label>
-                        <input type="radio" name="budget" id="b5" value="unsure" />
-                        <label for="b5" data-en="not sure yet" data-ua="поки не знаю">not sure yet</label>
-                    </div>
-                </label>
-                <label>
-                    <span data-en="Tell us about the project" data-ua="Коротко про проект">Tell us about the project</span>
-                    <textarea name="brief" rows="5" data-en-ph="What's the business, what do you want from the site, timing..." data-ua-ph="Що за бізнес, що хочете від сайту, які терміни..." placeholder="What's the business, what do you want from the site, timing..."></textarea>
-                </label>
-                <button type="submit" class="btn btn-primary btn-big" data-cursor="cta">
-                    <span data-en="Send brief" data-ua="Відправити бріф">Send brief</span>
-                    <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                </button>
-                <p class="form-hint"
-                   data-en="By submitting you agree to data processing. No spam, ever."
-                   data-ua="Натискаючи, ви погоджуєтесь з обробкою даних. Спаму не буде.">
-                    By submitting you agree to data processing. No spam, ever.
-                </p>
-            </form>
-        </div>
-    </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-top">
-            <div class="footer-logo">
-                <svg viewBox="0 0 400 130" class="footer-svg">
-                    <text x="0" y="105" class="footer-logo-text">RUNX</text>
-                </svg>
-                <div class="footer-tagline">
-                    <span data-en="RUNX Inc. · Chicago, IL · with 🇺🇦 Ukraine" data-ua="RUNX Inc. · Чикаго, IL · з 🇺🇦 Україною">RUNX Inc. · Chicago, IL · with 🇺🇦 Ukraine</span>
-                </div>
-            </div>
-            <div class="footer-links">
-                <div class="footer-col">
-                    <h3 data-en="Studio" data-ua="Студія">Studio</h3>
-                    <a href="#work" data-en="Portfolio" data-ua="Портфоліо">Portfolio</a>
-                    <a href="#about" data-en="About" data-ua="Про нас">About</a>
-                    <a href="#process" data-en="Process" data-ua="Процес">Process</a>
-                    <a href="#contact" data-en="Contact" data-ua="Контакти">Contact</a>
-                </div>
-                <div class="footer-col">
-                    <h3 data-en="Social" data-ua="Соц. мережі">Social</h3>
-                    <a href="https://www.instagram.com/runx_ai/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                    <a href="https://www.facebook.com/runxai" target="_blank" rel="noopener noreferrer">Facebook</a>
-                    <a href="https://www.linkedin.com/company/runx-ai/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                </div>
-                <div class="footer-col">
-                    <h3 data-en="Say hi" data-ua="Написати">Say hi</h3>
-                    <a href="mailto:go@runx.studio">go@runx.studio</a>
-                    <a href="https://t.me/runx_ai" target="_blank" rel="noopener noreferrer">Telegram @runx_ai</a>
-                    <a href="tel:+17738824877">+1 (773) 882-4877</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <span data-en="© 2016—2026 RUNX Inc. · Chicago, IL" data-ua="© 2016—2026 RUNX Inc. · Чикаго, IL">© 2016—2026 RUNX Inc. · Chicago, IL</span>
-            <span data-en="Made with ❤ — stands with Ukraine 🇺🇦" data-ua="Зроблено з ❤ — з Україною 🇺🇦">Made with ❤ — stands with Ukraine 🇺🇦</span>
-        </div>
-    </footer>
-
-    <!-- Scroll to top (mobile) -->
-    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
-        <svg viewBox="0 0 24 24" width="22" height="22">
-            <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-    </button>
-
-    <!-- Full-screen project modal -->
-    <div class="modal" id="modal">
-        <button class="modal-close" id="modalClose" aria-label="Close">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/></svg>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-hover>
+          <span id="themeIcon">&#9789;</span>
         </button>
-        <div class="modal-head">
-            <div class="modal-meta">
-                <span id="modalNum">01</span>
-                <span id="modalTitle">Project</span>
-            </div>
-            <div class="modal-scroll-label" data-en="Scroll ↓" data-ua="Скрол ↓">Scroll ↓</div>
-        </div>
-        <div class="modal-body" id="modalBody">
-            <!-- image injected via JS -->
-        </div>
+      </div>
+
+      <a href="#contact" class="btn-ink magnetic header-cta" data-hover id="headerCta">
+        <span class="btn-ink-label" data-i18n="nav.cta">Start a Conversation</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" data-hover>
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-lines" aria-hidden="true"></div>
+    <span class="plus-mark pm-1" aria-hidden="true"></span>
+    <span class="plus-mark pm-2" aria-hidden="true"></span>
+    <span class="plus-mark pm-3" aria-hidden="true"></span>
+
+    <div class="hero-top">
+      <p class="hero-eyebrow mono scramble" data-i18n="hero.eyebrow" data-text="ONE COMPANY / MULTIPLE GROWTH SYSTEMS">ONE COMPANY / MULTIPLE GROWTH SYSTEMS</p>
+      <p class="hero-coord mono">[ EST. SYSTEM v1.0 — RUNXAI.COM ]</p>
     </div>
 
-    <script src="script.js" defer></script>
+    <h1 class="hero-headline">
+      <span class="line"><span class="line-inner" data-i18n="hero.l1">GROWTH DOESN&rsquo;T</span></span>
+      <span class="line"><span class="line-inner" data-i18n="hero.l2">NEED MORE <em class="outline">CHAOS.</em></span></span>
+      <span class="line"><span class="line-inner" data-i18n="hero.l3">IT NEEDS <em class="accent">A&nbsp;SYSTEM.</em></span></span>
+    </h1>
+
+    <div class="hero-foot">
+      <p class="hero-sub" data-i18n="hero.sub">
+        RUNX connects strategy, marketing, technology, automation, and&nbsp;AI into
+        infrastructure built to help businesses grow with clarity and&nbsp;control.
+      </p>
+
+      <div class="hero-badge" aria-hidden="true">
+        <svg class="badge-svg" viewBox="0 0 120 120">
+          <defs>
+            <path id="circlePath" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/>
+          </defs>
+          <text class="badge-text">
+            <textPath href="#circlePath">RUNX GROWTH SYSTEMS &bull; MARKETING &bull; TECH &bull; AI &bull;&nbsp;</textPath>
+          </text>
+        </svg>
+        <span class="badge-arrow">&darr;</span>
+      </div>
+
+      <p class="hero-choose mono" data-i18n="hero.choose">CHOOSE WHERE YOU WANT TO GROW &nbsp;&darr;</p>
+    </div>
+
+    <!-- ============ ROUTER ============ -->
+    <div class="router" id="router">
+      <a class="route-card" href="/website" data-hover>
+        <span class="route-fill" aria-hidden="true"></span>
+        <span class="route-head">
+          <span class="route-index">01</span>
+          <span class="route-arrow" aria-hidden="true">&nearr;</span>
+        </span>
+        <span class="route-body">
+          <h2 class="route-title" data-i18n="r1.title">Websites</h2>
+          <span class="route-kicker mono" data-i18n="r1.kicker">CONVERSION-FOCUSED WEBSITES</span>
+          <span class="route-desc" data-i18n="r1.desc">Smart websites that turn attention into action — clear messaging, CRM-connected forms, AI assistants, automated lead routing.</span>
+        </span>
+        <span class="route-cta mono" data-i18n="r1.cta">EXPLORE WEBSITE SOLUTIONS</span>
+      </a>
+
+      <a class="route-card" href="https://trs.runxai.com" data-hover>
+        <span class="route-fill" aria-hidden="true"></span>
+        <span class="route-head">
+          <span class="route-index">02</span>
+          <span class="route-arrow" aria-hidden="true">&nearr;</span>
+        </span>
+        <span class="route-body">
+          <h2 class="route-title">TRS for Trucking</h2>
+          <span class="route-kicker mono" data-i18n="r2.kicker">DRIVER RECRUITING INFRASTRUCTURE</span>
+          <span class="route-desc" data-i18n="r2.desc">An end-to-end system for trucking companies: driver lead generation, AI qualification, recruiter workflows, follow-up automation, analytics.</span>
+        </span>
+        <span class="route-cta mono" data-i18n="r2.cta">EXPLORE TRS</span>
+      </a>
+
+      <a class="route-card" href="/business" data-hover>
+        <span class="route-fill" aria-hidden="true"></span>
+        <span class="route-head">
+          <span class="route-index">03</span>
+          <span class="route-arrow" aria-hidden="true">&nearr;</span>
+        </span>
+        <span class="route-body">
+          <h2 class="route-title" data-i18n="r3.title">Business Systems</h2>
+          <span class="route-kicker mono" data-i18n="r3.kicker">MARKETING, AUTOMATION &amp; CUSTOM BUILDS</span>
+          <span class="route-desc" data-i18n="r3.desc">Connected growth systems for SMBs — strategy, branding, paid media, local visibility, CRM, AI automation, custom software.</span>
+        </span>
+        <span class="route-cta mono" data-i18n="r3.cta">EXPLORE BUSINESS SYSTEMS</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ MARQUEE ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span data-i18n="marquee">MARKETING <i>&#10022;</i> TECHNOLOGY <i>&#10022;</i> AUTOMATION <i>&#10022;</i> AI <i>&#10022;</i> ONE SYSTEM <i>&#10022;</i>&nbsp;</span><span data-i18n="marquee">MARKETING <i>&#10022;</i> TECHNOLOGY <i>&#10022;</i> AUTOMATION <i>&#10022;</i> AI <i>&#10022;</i> ONE SYSTEM <i>&#10022;</i>&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ============ 02 / OVERVIEW ============ -->
+  <section class="section" id="overview">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="ov.tag" data-text="02 — WHAT IS RUNX">02 — WHAT IS RUNX</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+
+      <h2 class="statement reveal" data-i18n="ov.statement">
+        We don&rsquo;t sell disconnected services.<br>
+        We build <span class="hl">connected growth infrastructure.</span>
+      </h2>
+      <p class="lede reveal" style="--d:.1s" data-i18n="ov.lede">
+        From the first click to the final conversion, RUNX connects the customer journey
+        into one measurable system — strategy, acquisition, communication, CRM,
+        automation, and analytics.
+      </p>
+
+      <div class="principles">
+        <div class="principle reveal">
+          <span class="principle-num mono">/01</span>
+          <h3 data-i18n="p1.h">System-first</h3>
+          <p data-i18n="p1.t">Every tool works as part of a single process — not as a separate service.</p>
+        </div>
+        <div class="principle reveal" style="--d:.08s">
+          <span class="principle-num mono">/02</span>
+          <h3 data-i18n="p2.h">Built for visibility</h3>
+          <p data-i18n="p2.t">Leads, communication, stages, and results can be seen and measured.</p>
+        </div>
+        <div class="principle reveal" style="--d:.16s">
+          <span class="principle-num mono">/03</span>
+          <h3 data-i18n="p3.h">Designed to keep working</h3>
+          <p data-i18n="p3.t">The system keeps the process, data, and follow-up — even when the team changes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 / CAPABILITIES ============ -->
+  <section class="section section-caps" id="capabilities">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="caps.tag" data-text="03 — CAPABILITIES">03 — CAPABILITIES</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="caps.statement">Four disciplines.<br>One operating&nbsp;system.</h2>
+
+      <div class="caps-table">
+        <div class="cap-row reveal" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">A</span>
+          <h3 class="cap-title" data-i18n="capA.h">Growth &amp; Marketing</h3>
+          <p class="cap-desc" data-i18n="capA.t">Strategy, brand positioning, Meta &amp; Google advertising, local presence, funnels, performance analytics.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+        <div class="cap-row reveal" style="--d:.06s" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">B</span>
+          <h3 class="cap-title" data-i18n="capB.h">Development</h3>
+          <p class="cap-desc" data-i18n="capB.t">Conversion-focused websites, custom software, integrations, dashboards, operational tools.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+        <div class="cap-row reveal" style="--d:.12s" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">C</span>
+          <h3 class="cap-title" data-i18n="capC.h">Automation &amp; CRM</h3>
+          <p class="cap-desc" data-i18n="capC.t">Pipeline design, lead routing, follow-up logic, centralized data, process visibility.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+        <div class="cap-row reveal" style="--d:.18s" data-hover>
+          <span class="cap-fill" aria-hidden="true"></span>
+          <span class="cap-idx mono">D</span>
+          <h3 class="cap-title" data-i18n="capD.h">AI Communication</h3>
+          <p class="cap-desc" data-i18n="capD.t">24/7 voice &amp; chat handling, qualification, follow-up, intelligent customer or candidate communication.</p>
+          <span class="cap-arrow" aria-hidden="true">&rarr;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 / PROCESS (dark band) ============ -->
+  <section class="section section-ink" id="process">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="proc.tag" data-text="04 — HOW WE WORK">04 — HOW WE WORK</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="proc.statement">A clear path from<br>chaos to <span class="accent-text">control.</span></h2>
+
+      <div class="process-grid" id="processGrid">
+        <div class="process-line" aria-hidden="true"><span class="process-line-fill" id="processLineFill"></span></div>
+
+        <div class="process-step reveal">
+          <span class="step-num">01</span>
+          <h3 data-i18n="s1.h">Diagnose</h3>
+          <p data-i18n="s1.t">We map the current customer journey, recruiting flow, tools, bottlenecks, data, and business goals.</p>
+        </div>
+        <div class="process-step reveal" style="--d:.08s">
+          <span class="step-num">02</span>
+          <h3 data-i18n="s2.h">Design</h3>
+          <p data-i18n="s2.t">We define the system architecture, messaging, workflows, integrations, ownership, and success metrics.</p>
+        </div>
+        <div class="process-step reveal" style="--d:.16s">
+          <span class="step-num">03</span>
+          <h3 data-i18n="s3.h">Build</h3>
+          <p data-i18n="s3.t">We launch the connected experience — marketing, website or funnel, CRM, automation, AI, and reporting.</p>
+        </div>
+        <div class="process-step reveal" style="--d:.24s">
+          <span class="step-num">04</span>
+          <h3 data-i18n="s4.h">Optimize</h3>
+          <p data-i18n="s4.t">We measure performance, improve conversion points, reactivate data, and strengthen the system over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 / WHY RUNX ============ -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="why.tag" data-text="05 — WHY RUNX">05 — WHY RUNX</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="why.statement">The difference is <span class="hl">structural.</span></h2>
+
+      <ul class="proof-list">
+        <li class="reveal"><span class="proof-key mono">SYS/01</span><p data-i18n="pr1"><strong>System-first.</strong> We build permanent infrastructure, not temporary lead volume.</p></li>
+        <li class="reveal" style="--d:.05s"><span class="proof-key mono">VIS/02</span><p data-i18n="pr2"><strong>Full visibility.</strong> Every lead, stage, conversation, and result can be tracked.</p></li>
+        <li class="reveal" style="--d:.1s"><span class="proof-key mono">FLW/03</span><p data-i18n="pr3"><strong>Built-in follow-up.</strong> Opportunities don&rsquo;t disappear after the first missed response.</p></li>
+        <li class="reveal" style="--d:.15s"><span class="proof-key mono">OWN/04</span><p data-i18n="pr4"><strong>Client-owned data.</strong> The business keeps control of its database and history.</p></li>
+        <li class="reveal" style="--d:.2s"><span class="proof-key mono">CNT/05</span><p data-i18n="pr5"><strong>Designed for continuity.</strong> The process keeps working when campaigns or team members change.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TILTED COUNTER-MARQUEE ============ -->
+  <div class="marquee marquee--reverse marquee--tilt" aria-hidden="true">
+    <div class="marquee-track">
+      <span data-i18n="marquee2">SYSTEMS <i>&#10022;</i> NOT SERVICES <i>&#10022;</i> BUILT TO LAST <i>&#10022;</i> MEASURED <i>&#10022;</i> CONNECTED <i>&#10022;</i>&nbsp;</span><span data-i18n="marquee2">SYSTEMS <i>&#10022;</i> NOT SERVICES <i>&#10022;</i> BUILT TO LAST <i>&#10022;</i> MEASURED <i>&#10022;</i> CONNECTED <i>&#10022;</i>&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- TEAM: тимчасово знято, збережено у team-section.html (чекаємо фото/імена) -->
+
+  <!-- ============ 06 / LOCATION ============ -->
+  <section class="section section-location" id="location">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="loc.tag" data-text="06 — WHERE WE ARE">06 — WHERE WE ARE</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <!-- PLACEHOLDER: реальне місто/штат -->
+      <h2 class="statement reveal" data-i18n="loc.statement">Based in <span class="hl">[City, State]</span>.<br>Serving businesses across the United&nbsp;States.</h2>
+      <p class="lede reveal" style="--d:.1s" data-i18n="loc.lede">
+        Our team collaborates remotely and coordinates projects across strategy, marketing,
+        development, automation, and AI. On-site strategy sessions by arrangement.
+      </p>
+      <p class="location-coords mono reveal" style="--d:.16s">LAT 00.0000&deg; N &nbsp;/&nbsp; LON 00.0000&deg; W &nbsp;/&nbsp; TZ&nbsp;US</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 / CONTACT (ink) ============ -->
+  <section class="section section-ink section-contact" id="contact">
+    <div class="container">
+      <div class="section-tag">
+        <span class="mono scramble" data-i18n="ct.tag" data-text="07 — CONTACT">07 — CONTACT</span>
+        <span class="tag-rule" aria-hidden="true"></span>
+      </div>
+      <h2 class="statement reveal" data-i18n="ct.statement">Tell us what you want to <span class="accent-text">grow, fix, or automate.</span></h2>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-field reveal">
+            <label class="mono" for="fName" data-i18n="f.name">NAME</label>
+            <input type="text" id="fName" name="name" required autocomplete="name" placeholder="Your name" data-i18n-ph="f.namePh">
+          </div>
+          <div class="form-field reveal" style="--d:.05s">
+            <label class="mono" for="fEmail" data-i18n="f.email">WORK EMAIL</label>
+            <input type="email" id="fEmail" name="email" required autocomplete="email" placeholder="name@company.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field reveal" style="--d:.1s">
+            <label class="mono" for="fPhone" data-i18n="f.phone">PHONE — OPTIONAL</label>
+            <input type="tel" id="fPhone" name="phone" autocomplete="tel" placeholder="+1">
+          </div>
+          <div class="form-field reveal" style="--d:.15s">
+            <label class="mono" for="fInterest" data-i18n="f.interest">I&rsquo;M INTERESTED IN</label>
+            <select id="fInterest" name="interest" required>
+              <option value="" selected disabled data-i18n="f.opt0">Select a direction</option>
+              <option value="websites" data-i18n="f.opt1">Websites</option>
+              <option value="trs">TRS for Trucking</option>
+              <option value="business" data-i18n="f.opt3">Business Systems</option>
+              <option value="unsure" data-i18n="f.opt4">Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field reveal" style="--d:.2s">
+          <label class="mono" for="fMessage" data-i18n="f.message">WHAT ARE YOU TRYING TO GROW, FIX, OR AUTOMATE?</label>
+          <textarea id="fMessage" name="message" rows="3" required placeholder="A few sentences is enough." data-i18n-ph="f.messagePh"></textarea>
+        </div>
+        <button type="submit" class="btn-accent magnetic reveal" style="--d:.25s" data-hover>
+          <span data-i18n="f.submit">Start the Conversation</span>
+          <span class="btn-accent-arrow" aria-hidden="true">&rarr;</span>
+        </button>
+        <p class="form-confirmation mono" id="formConfirmation" hidden data-i18n="f.confirm">
+          &#10003; THANKS — YOUR MESSAGE IS WITH THE RIGHT RUNX TEAM. WE&rsquo;LL FOLLOW UP SHORTLY.
+        </p>
+      </form>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top">
+          <span class="footer-logo" aria-hidden="true">RUNX</span>
+        </div>
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <p class="mono" data-i18n="ft.brand">SYSTEMS BEHIND PREDICTABLE GROWTH.</p>
+          </div>
+          <nav class="footer-col" aria-label="Directions">
+            <h4 class="mono" data-i18n="ft.dir">DIRECTIONS</h4>
+            <a href="/website" data-hover data-i18n="ft.web">Websites</a>
+            <a href="https://trs.runxai.com" data-hover>TRS for Trucking</a>
+            <a href="/business" data-hover data-i18n="ft.biz">Business Systems</a>
+          </nav>
+          <nav class="footer-col" aria-label="Company">
+            <h4 class="mono" data-i18n="ft.company">COMPANY</h4>
+            <a href="#overview" data-hover data-i18n="ft.about">About</a>
+            <a href="#process" data-hover data-i18n="ft.how">How We Work</a>
+            <a href="#contact" data-hover data-i18n="ft.contactLink">Contact</a>
+          </nav>
+          <div class="footer-col">
+            <h4 class="mono" data-i18n="ft.contact">CONTACT</h4>
+            <!-- PLACEHOLDER: підтверджений email -->
+            <a href="mailto:hello@runxai.com" data-hover>hello@runxai.com</a>
+          </div>
+        </div>
+        <div class="footer-bottom mono">
+          <p>&copy; <span id="year">2026</span> RUNX. <span data-i18n="ft.rights">ALL RIGHTS RESERVED.</span></p>
+          <p><a href="#" data-hover data-i18n="ft.privacy">PRIVACY</a> &nbsp;/&nbsp; <a href="#" data-hover data-i18n="ft.terms">TERMS</a></p>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

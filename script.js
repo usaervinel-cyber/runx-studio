@@ -1,452 +1,694 @@
-/* ========================================
-   RUNX Portfolio · Interactions
-======================================== */
+/* RUNX HUB — interactions, i18n, theme */
+(function () {
+  'use strict';
 
-(() => {
-    'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia('(hover: hover)').matches;
 
-    /* -------- LOADER -------- */
-    const loader = document.getElementById('loader');
-    const loaderCount = document.getElementById('loaderCount');
-    let count = 0;
-    const counter = setInterval(() => {
-        count += Math.floor(Math.random() * 8) + 2;
-        if (count >= 100) {
-            count = 100;
-            clearInterval(counter);
-            setTimeout(() => {
-                loader.classList.add('is-done');
-                document.body.classList.add('is-loaded');
-                renderHeroTitle(currentLang);
-            }, 400);
-        }
-        loaderCount.textContent = count;
-    }, 40);
+  /* ============================================================
+     I18N — EN (default, у HTML) / UA / RU
+     ============================================================ */
+  var I18N = {
+    ua: {
+      'nav.about': 'Про нас',
+      'nav.caps': 'Компетенції',
+      'nav.contact': 'Контакт',
+      'nav.cta': 'Почати розмову',
 
-    /* -------- LANGUAGE SWITCHER -------- */
-    let currentLang = localStorage.getItem('runx-lang') || 'en';
+      'hero.eyebrow': 'ОДНА КОМПАНІЯ / КІЛЬКА СИСТЕМ РОСТУ',
+      'hero.l1': 'ЗРОСТАННЮ НЕ ТРЕБА',
+      'hero.l2': 'БІЛЬШЕ <em class="outline">ХАОСУ.</em>',
+      'hero.l3': 'ЙОМУ ТРЕБА <em class="accent">СИСТЕМА.</em>',
+      'hero.sub': 'RUNX поєднує стратегію, маркетинг, технології, автоматизацію та AI в інфраструктуру, що допомагає бізнесу зростати з ясністю та контролем.',
+      'hero.choose': 'ОБЕРИ, ДЕ ТИ ХОЧЕШ ЗРОСТАТИ &nbsp;&darr;',
 
-    function applyLang(lang, skipTextSwap = false) {
-        currentLang = lang;
-        const htmlLang = lang === 'ua' ? 'uk' : 'en';
-        if (document.documentElement.lang !== htmlLang) {
-            document.documentElement.lang = htmlLang;
-        }
-        localStorage.setItem('runx-lang', lang);
+      'r1.title': 'Сайти',
+      'r1.kicker': 'САЙТИ, ЩО КОНВЕРТУЮТЬ',
+      'r1.desc': 'Розумні сайти, що перетворюють увагу на дію — чіткі меседжі, форми, підключені до CRM, AI-асистенти, автоматичний розподіл лідів.',
+      'r1.cta': 'ПЕРЕЙТИ ДО САЙТІВ',
+      'r2.kicker': 'ІНФРАСТРУКТУРА РЕКРУТИНГУ ВОДІЇВ',
+      'r2.desc': 'Система під ключ для тракових компаній: генерація лідів-водіїв, AI-кваліфікація, воркфлоу рекрутерів, автоматичні фолоу-апи, аналітика.',
+      'r2.cta': 'ПЕРЕЙТИ ДО TRS',
+      'r3.title': 'Бізнес-системи',
+      'r3.kicker': 'МАРКЕТИНГ, АВТОМАТИЗАЦІЯ І КАСТОМНІ РІШЕННЯ',
+      'r3.desc': 'Пов&rsquo;язані системи зростання для бізнесу — стратегія, брендинг, платна реклама, локальна видимість, CRM, AI-автоматизація, кастомний софт.',
+      'r3.cta': 'ПЕРЕЙТИ ДО БІЗНЕС-СИСТЕМ',
 
-        // On initial load with default EN, HTML already contains EN text.
-        // Skip the expensive DOM traversal + innerHTML writes to cut TBT.
-        if (!skipTextSwap) {
-            document.querySelectorAll('[data-en]').forEach(el => {
-                if (el.id === 'heroTitle') return;
-                const val = el.getAttribute(`data-${lang}`);
-                if (val != null) el.innerHTML = val;
-            });
-            document.querySelectorAll('[data-en-ph]').forEach(el => {
-                const val = el.getAttribute(`data-${lang}-ph`);
-                if (val != null) el.placeholder = val;
-            });
-        }
+      'marquee': 'МАРКЕТИНГ <i>&#10022;</i> ТЕХНОЛОГІЇ <i>&#10022;</i> АВТОМАТИЗАЦІЯ <i>&#10022;</i> AI <i>&#10022;</i> ОДНА СИСТЕМА <i>&#10022;</i>&nbsp;',
+      'marquee2': 'СИСТЕМИ <i>&#10022;</i> А НЕ ПОСЛУГИ <i>&#10022;</i> ПОБУДОВАНО НАДОВГО <i>&#10022;</i> ВИМІРЮВАНО <i>&#10022;</i> ПОВ&rsquo;ЯЗАНО <i>&#10022;</i>&nbsp;',
 
-        document.querySelectorAll('[data-set-lang]').forEach(btn => {
-            btn.classList.toggle('active', btn.getAttribute('data-set-lang') === lang);
-        });
+      'ov.tag': '02 — ЩО ТАКЕ RUNX',
+      'ov.statement': 'Ми не продаємо розрізнені послуги.<br>Ми будуємо <span class="hl">єдину інфраструктуру зростання.</span>',
+      'ov.lede': 'Від першого кліку до фінальної конверсії RUNX з&rsquo;єднує шлях клієнта в одну вимірювану систему — стратегія, залучення, комунікація, CRM, автоматизація й аналітика.',
+      'p1.h': 'Спершу система',
+      'p1.t': 'Кожен інструмент працює як частина єдиного процесу, а не як окрема послуга.',
+      'p2.h': 'Повна видимість',
+      'p2.t': 'Ліди, комунікацію, етапи й результати можна бачити та вимірювати.',
+      'p3.h': 'Працює без зупинок',
+      'p3.t': 'Система зберігає процес, дані та фолоу-апи — навіть коли команда змінюється.',
 
-        renderHeroTitle(lang);
+      'caps.tag': '03 — КОМПЕТЕНЦІЇ',
+      'caps.statement': 'Чотири дисципліни.<br>Одна операційна система.',
+      'capA.h': 'Ріст і маркетинг',
+      'capA.t': 'Стратегія, позиціонування бренду, реклама Meta та Google, локальна присутність, воронки, аналітика ефективності.',
+      'capB.h': 'Розробка',
+      'capB.t': 'Сайти, що конвертують, кастомний софт, інтеграції, дашборди, операційні інструменти.',
+      'capC.h': 'Автоматизація і CRM',
+      'capC.t': 'Дизайн пайплайнів, маршрутизація лідів, логіка фолоу-апів, централізовані дані, видимість процесів.',
+      'capD.h': 'AI-комунікація',
+      'capD.t': 'Обробка дзвінків і чатів 24/7, кваліфікація, фолоу-апи, розумна комунікація з клієнтами й кандидатами.',
+
+      'proc.tag': '04 — ЯК МИ ПРАЦЮЄМО',
+      'proc.statement': 'Чіткий шлях від<br>хаосу до <span class="accent-text">контролю.</span>',
+      's1.h': 'Діагностика',
+      's1.t': 'Мапуємо поточний шлях клієнта, рекрутинг-флоу, інструменти, вузькі місця, дані та цілі бізнесу.',
+      's2.h': 'Проєктування',
+      's2.t': 'Визначаємо архітектуру системи, меседжинг, воркфлоу, інтеграції, відповідальність і метрики успіху.',
+      's3.h': 'Запуск',
+      's3.t': 'Запускаємо пов&rsquo;язаний досвід — маркетинг, сайт чи воронку, CRM, автоматизацію, AI та звітність.',
+      's4.h': 'Оптимізація',
+      's4.t': 'Вимірюємо результати, покращуємо точки конверсії, реактивуємо базу та підсилюємо систему з часом.',
+
+      'why.tag': '05 — ЧОМУ RUNX',
+      'why.statement': 'Різниця — <span class="hl">структурна.</span>',
+      'pr1': '<strong>Спершу система.</strong> Ми будуємо постійну інфраструктуру, а не тимчасовий потік лідів.',
+      'pr2': '<strong>Повна видимість.</strong> Кожен лід, етап, розмову й результат можна відстежити.',
+      'pr3': '<strong>Вбудовані фолоу-апи.</strong> Можливості не зникають після першої пропущеної відповіді.',
+      'pr4': '<strong>Дані належать клієнту.</strong> Бізнес зберігає контроль над своєю базою та історією.',
+      'pr5': '<strong>Створено для безперервності.</strong> Процес працює далі, коли змінюються кампанії чи люди в команді.',
+
+      'loc.tag': '06 — ДЕ МИ',
+      'loc.statement': 'Базуємось у <span class="hl">[Місто, Штат]</span>.<br>Працюємо з бізнесами по всіх США.',
+      'loc.lede': 'Наша команда працює віддалено й координує проєкти зі стратегії, маркетингу, розробки, автоматизації та AI. Стратегічні сесії на місці — за домовленістю.',
+
+      'ct.tag': '07 — КОНТАКТ',
+      'ct.statement': 'Розкажіть, що ви хочете <span class="accent-text">зростити, виправити чи автоматизувати.</span>',
+      'f.name': 'ІМ&rsquo;Я',
+      'f.namePh': 'Ваше ім&rsquo;я',
+      'f.email': 'РОБОЧИЙ EMAIL',
+      'f.phone': 'ТЕЛЕФОН — НЕОБОВ&rsquo;ЯЗКОВО',
+      'f.interest': 'МЕНЕ ЦІКАВИТЬ',
+      'f.opt0': 'Оберіть напрямок',
+      'f.opt1': 'Сайти',
+      'f.opt3': 'Бізнес-системи',
+      'f.opt4': 'Ще не знаю',
+      'f.message': 'ЩО ВИ ХОЧЕТЕ ЗРОСТИТИ, ВИПРАВИТИ ЧИ АВТОМАТИЗУВАТИ?',
+      'f.messagePh': 'Кількох речень достатньо.',
+      'f.submit': 'Почати розмову',
+      'f.confirm': '&#10003; ДЯКУЄМО — ВАШЕ ПОВІДОМЛЕННЯ ВЖЕ В ПОТРІБНОЇ КОМАНДИ RUNX. МИ СКОРО ЗВ&rsquo;ЯЖЕМОСЬ.',
+
+      'ft.brand': 'СИСТЕМИ, ЩО СТОЯТЬ ЗА ПЕРЕДБАЧУВАНИМ РОСТОМ.',
+      'ft.dir': 'НАПРЯМКИ',
+      'ft.web': 'Сайти',
+      'ft.biz': 'Бізнес-системи',
+      'ft.company': 'КОМПАНІЯ',
+      'ft.about': 'Про нас',
+      'ft.how': 'Як ми працюємо',
+      'ft.contactLink': 'Контакт',
+      'ft.contact': 'КОНТАКТ',
+      'ft.rights': 'ВСІ ПРАВА ЗАХИЩЕНО.',
+      'ft.privacy': 'ПРИВАТНІСТЬ',
+      'ft.terms': 'УМОВИ'
+    },
+
+    ru: {
+      'nav.about': 'О нас',
+      'nav.caps': 'Компетенции',
+      'nav.contact': 'Контакт',
+      'nav.cta': 'Начать разговор',
+
+      'hero.eyebrow': 'ОДНА КОМПАНИЯ / НЕСКОЛЬКО СИСТЕМ РОСТА',
+      'hero.l1': 'РОСТУ НЕ НУЖНО',
+      'hero.l2': 'БОЛЬШЕ <em class="outline">ХАОСА.</em>',
+      'hero.l3': 'ЕМУ НУЖНА <em class="accent">СИСТЕМА.</em>',
+      'hero.sub': 'RUNX соединяет стратегию, маркетинг, технологии, автоматизацию и AI в инфраструктуру, которая помогает бизнесу расти с ясностью и контролем.',
+      'hero.choose': 'ВЫБЕРИ, ГДЕ ХОЧЕШЬ РАСТИ &nbsp;&darr;',
+
+      'r1.title': 'Сайты',
+      'r1.kicker': 'САЙТЫ, КОТОРЫЕ КОНВЕРТИРУЮТ',
+      'r1.desc': 'Умные сайты, превращающие внимание в действие — чёткие месседжи, формы, подключённые к CRM, AI-ассистенты, автоматическая маршрутизация лидов.',
+      'r1.cta': 'ПЕРЕЙТИ К САЙТАМ',
+      'r2.kicker': 'ИНФРАСТРУКТУРА РЕКРУТИНГА ВОДИТЕЛЕЙ',
+      'r2.desc': 'Система под ключ для траковых компаний: генерация лидов-водителей, AI-квалификация, воркфлоу рекрутеров, автоматические фоллоу-апы, аналитика.',
+      'r2.cta': 'ПЕРЕЙТИ К TRS',
+      'r3.title': 'Бизнес-системы',
+      'r3.kicker': 'МАРКЕТИНГ, АВТОМАТИЗАЦИЯ И КАСТОМНЫЕ РЕШЕНИЯ',
+      'r3.desc': 'Связанные системы роста для бизнеса — стратегия, брендинг, платная реклама, локальная видимость, CRM, AI-автоматизация, кастомный софт.',
+      'r3.cta': 'ПЕРЕЙТИ К БИЗНЕС-СИСТЕМАМ',
+
+      'marquee': 'МАРКЕТИНГ <i>&#10022;</i> ТЕХНОЛОГИИ <i>&#10022;</i> АВТОМАТИЗАЦИЯ <i>&#10022;</i> AI <i>&#10022;</i> ОДНА СИСТЕМА <i>&#10022;</i>&nbsp;',
+      'marquee2': 'СИСТЕМЫ <i>&#10022;</i> А НЕ УСЛУГИ <i>&#10022;</i> ПОСТРОЕНО НАДОЛГО <i>&#10022;</i> ИЗМЕРИМО <i>&#10022;</i> СВЯЗАНО <i>&#10022;</i>&nbsp;',
+
+      'ov.tag': '02 — ЧТО ТАКОЕ RUNX',
+      'ov.statement': 'Мы не продаём разрозненные услуги.<br>Мы строим <span class="hl">единую инфраструктуру роста.</span>',
+      'ov.lede': 'От первого клика до финальной конверсии RUNX соединяет путь клиента в одну измеримую систему — стратегия, привлечение, коммуникация, CRM, автоматизация и аналитика.',
+      'p1.h': 'Сначала система',
+      'p1.t': 'Каждый инструмент работает как часть единого процесса, а не как отдельная услуга.',
+      'p2.h': 'Полная видимость',
+      'p2.t': 'Лиды, коммуникацию, этапы и результаты можно видеть и измерять.',
+      'p3.h': 'Работает без остановок',
+      'p3.t': 'Система сохраняет процесс, данные и фоллоу-апы — даже когда команда меняется.',
+
+      'caps.tag': '03 — КОМПЕТЕНЦИИ',
+      'caps.statement': 'Четыре дисциплины.<br>Одна операционная система.',
+      'capA.h': 'Рост и маркетинг',
+      'capA.t': 'Стратегия, позиционирование бренда, реклама Meta и Google, локальное присутствие, воронки, аналитика эффективности.',
+      'capB.h': 'Разработка',
+      'capB.t': 'Конвертирующие сайты, кастомный софт, интеграции, дашборды, операционные инструменты.',
+      'capC.h': 'Автоматизация и CRM',
+      'capC.t': 'Дизайн пайплайнов, маршрутизация лидов, логика фоллоу-апов, централизованные данные, видимость процессов.',
+      'capD.h': 'AI-коммуникация',
+      'capD.t': 'Обработка звонков и чатов 24/7, квалификация, фоллоу-апы, умная коммуникация с клиентами и кандидатами.',
+
+      'proc.tag': '04 — КАК МЫ РАБОТАЕМ',
+      'proc.statement': 'Чёткий путь от<br>хаоса к <span class="accent-text">контролю.</span>',
+      's1.h': 'Диагностика',
+      's1.t': 'Мапируем текущий путь клиента, рекрутинг-флоу, инструменты, узкие места, данные и цели бизнеса.',
+      's2.h': 'Проектирование',
+      's2.t': 'Определяем архитектуру системы, месседжинг, воркфлоу, интеграции, ответственность и метрики успеха.',
+      's3.h': 'Запуск',
+      's3.t': 'Запускаем связанный опыт — маркетинг, сайт или воронку, CRM, автоматизацию, AI и отчётность.',
+      's4.h': 'Оптимизация',
+      's4.t': 'Измеряем результаты, улучшаем точки конверсии, реактивируем базу и усиливаем систему со временем.',
+
+      'why.tag': '05 — ПОЧЕМУ RUNX',
+      'why.statement': 'Разница — <span class="hl">структурная.</span>',
+      'pr1': '<strong>Сначала система.</strong> Мы строим постоянную инфраструктуру, а не временный поток лидов.',
+      'pr2': '<strong>Полная видимость.</strong> Каждый лид, этап, разговор и результат можно отследить.',
+      'pr3': '<strong>Встроенные фоллоу-апы.</strong> Возможности не исчезают после первого пропущенного ответа.',
+      'pr4': '<strong>Данные принадлежат клиенту.</strong> Бизнес сохраняет контроль над своей базой и историей.',
+      'pr5': '<strong>Создано для непрерывности.</strong> Процесс продолжает работать, когда меняются кампании или люди в команде.',
+
+      'loc.tag': '06 — ГДЕ МЫ',
+      'loc.statement': 'Базируемся в <span class="hl">[Город, Штат]</span>.<br>Работаем с бизнесами по всем США.',
+      'loc.lede': 'Наша команда работает удалённо и координирует проекты по стратегии, маркетингу, разработке, автоматизации и AI. Стратегические сессии на месте — по договорённости.',
+
+      'ct.tag': '07 — КОНТАКТ',
+      'ct.statement': 'Расскажите, что вы хотите <span class="accent-text">вырастить, исправить или автоматизировать.</span>',
+      'f.name': 'ИМЯ',
+      'f.namePh': 'Ваше имя',
+      'f.email': 'РАБОЧИЙ EMAIL',
+      'f.phone': 'ТЕЛЕФОН — НЕОБЯЗАТЕЛЬНО',
+      'f.interest': 'МЕНЯ ИНТЕРЕСУЕТ',
+      'f.opt0': 'Выберите направление',
+      'f.opt1': 'Сайты',
+      'f.opt3': 'Бизнес-системы',
+      'f.opt4': 'Пока не знаю',
+      'f.message': 'ЧТО ВЫ ХОТИТЕ ВЫРАСТИТЬ, ИСПРАВИТЬ ИЛИ АВТОМАТИЗИРОВАТЬ?',
+      'f.messagePh': 'Нескольких предложений достаточно.',
+      'f.submit': 'Начать разговор',
+      'f.confirm': '&#10003; СПАСИБО — ВАШЕ СООБЩЕНИЕ УЖЕ У НУЖНОЙ КОМАНДЫ RUNX. МЫ СКОРО СВЯЖЕМСЯ.',
+
+      'ft.brand': 'СИСТЕМЫ, СТОЯЩИЕ ЗА ПРЕДСКАЗУЕМЫМ РОСТОМ.',
+      'ft.dir': 'НАПРАВЛЕНИЯ',
+      'ft.web': 'Сайты',
+      'ft.biz': 'Бизнес-системы',
+      'ft.company': 'КОМПАНИЯ',
+      'ft.about': 'О нас',
+      'ft.how': 'Как мы работаем',
+      'ft.contactLink': 'Контакт',
+      'ft.contact': 'КОНТАКТ',
+      'ft.rights': 'ВСЕ ПРАВА ЗАЩИЩЕНЫ.',
+      'ft.privacy': 'ПРИВАТНОСТЬ',
+      'ft.terms': 'УСЛОВИЯ'
     }
+  };
 
-    function renderHeroTitle(lang) {
-        const el = document.getElementById('heroTitle');
-        if (!el) return;
-        const text = el.getAttribute(`data-${lang}`) || el.textContent;
+  /* EN словник знімається з HTML при старті — щоб можна було повернутись */
+  var enDefaults = { text: {}, ph: {} };
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    var k = el.getAttribute('data-i18n');
+    if (!(k in enDefaults.text)) enDefaults.text[k] = el.innerHTML;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
+    var k = el.getAttribute('data-i18n-ph');
+    if (!(k in enDefaults.ph)) enDefaults.ph[k] = el.getAttribute('placeholder') || '';
+  });
 
-        // Simple split: detect words that should be italic/accent by markers
-        // We'll hardcode the last word to be italic+accent
-        const words = text.trim().split(/\s+/);
-        const html = words.map((word, wi) => {
-            const isLast = wi === words.length - 1;
-            const cls = isLast ? 'word italic accent' : 'word';
-            const letters = [...word].map((l, li) => {
-                const delay = 0.15 + (wi * 0.08) + (li * 0.025);
-                return `<span class="letter" style="animation-delay:${delay}s">${l === ' ' ? '&nbsp;' : l}</span>`;
-            }).join('');
-            return `<span class="${cls}">${letters}</span>`;
-        }).join(' ');
+  var langSwitch = document.getElementById('langSwitch');
 
-        el.innerHTML = html;
+  function setLang(lang) {
+    var dict = I18N[lang] || null; /* null → EN defaults */
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var k = el.getAttribute('data-i18n');
+      var html = dict && dict[k] != null ? dict[k] : enDefaults.text[k];
+      if (html == null) return;
+      el.innerHTML = html;
+      if (el.hasAttribute('data-text')) el.setAttribute('data-text', el.textContent);
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
+      var k = el.getAttribute('data-i18n-ph');
+      var v = dict && dict[k] != null ? dict[k] : enDefaults.ph[k];
+      if (v == null) return;
+      var tmp = document.createElement('span');
+      tmp.innerHTML = v;
+      el.setAttribute('placeholder', tmp.textContent);
+    });
+    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+    langSwitch.querySelectorAll('button').forEach(function (b) {
+      b.classList.toggle('is-active', b.getAttribute('data-lang') === lang);
+    });
+    try { localStorage.setItem('runx-lang', lang); } catch (e) {}
+    var yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+    /* re-split animated typography for the new language */
+    initStatements();
+    initChaosLetters();
+    loopMarquees();
+  }
+
+  /* ============================================================
+     Marquee: clone content until the track covers 2× viewport,
+     keep px/s speed constant regardless of width/language
+     ============================================================ */
+  function loopMarquees() {
+    document.querySelectorAll('.marquee-track').forEach(function (track) {
+      var spans = track.querySelectorAll(':scope > span');
+      if (!spans.length) return;
+      var tpl = spans[0];
+      for (var i = spans.length - 1; i > 0; i--) track.removeChild(spans[i]);
+      var w = tpl.getBoundingClientRect().width;
+      if (!w) { track.appendChild(tpl.cloneNode(true)); return; }
+      var copies = Math.max(2, Math.ceil((window.innerWidth * 1.1) / w));
+      var frag = document.createDocumentFragment();
+      for (var j = 1; j < copies * 2; j++) frag.appendChild(tpl.cloneNode(true));
+      track.appendChild(frag);
+      /* -50% за цикл → половина треку; швидкість ~95 px/s */
+      track.style.animationDuration = Math.max(14, Math.round((w * copies) / 95)) + 's';
+    });
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(loopMarquees);
+  } else {
+    loopMarquees();
+  }
+  var marqueeResizeT;
+  window.addEventListener('resize', function () {
+    clearTimeout(marqueeResizeT);
+    marqueeResizeT = setTimeout(loopMarquees, 200);
+  });
+
+  /* ============================================================
+     Split typography helpers
+     ============================================================ */
+
+  /* wrap every word of .statement in a masked span → staggered rise */
+  var statementIO = null;
+  function splitWordsIn(node, state) {
+    Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+      if (child.nodeType === 3) { /* text */
+        var parts = child.textContent.split(' ');
+        var frag = document.createDocumentFragment();
+        parts.forEach(function (word, i) {
+          if (word !== '') {
+            var w = document.createElement('span');
+            w.className = 'w';
+            var inner = document.createElement('span');
+            inner.className = 'w-inner';
+            inner.textContent = word;
+            inner.style.setProperty('--wd', (state.i * 0.045) + 's');
+            state.i++;
+            w.appendChild(inner);
+            frag.appendChild(w);
+          }
+          if (i < parts.length - 1) frag.appendChild(document.createTextNode(' '));
+        });
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === 1 && child.tagName !== 'BR') {
+        splitWordsIn(child, state);
+      }
+    });
+  }
+
+  function initStatements() {
+    if (reduced) return;
+    var statements = document.querySelectorAll('.statement');
+    if (!statementIO && 'IntersectionObserver' in window) {
+      statementIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('words-in');
+            statementIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
     }
+    statements.forEach(function (el) {
+      if (el.querySelector('.w')) return; /* уже розбито (init після setLang) */
+      splitWordsIn(el, { i: 0 });
+      el.classList.add('split');
+      if (!el.classList.contains('words-in') && statementIO) statementIO.observe(el);
+    });
+  }
 
-    // Wire up switcher
-    document.querySelectorAll('[data-set-lang]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            applyLang(btn.getAttribute('data-set-lang'));
+  /* split the outlined CHAOS word into jittering letters */
+  function initChaosLetters() {
+    if (reduced) return;
+    document.querySelectorAll('.hero-headline .outline').forEach(function (em) {
+      if (em.querySelector('.chaos-letter')) return;
+      var text = em.textContent;
+      em.textContent = '';
+      for (var i = 0; i < text.length; i++) {
+        var s = document.createElement('span');
+        s.className = 'chaos-letter';
+        s.textContent = text[i];
+        s.style.setProperty('--cd', (-(i * 0.37) % 2.1).toFixed(2) + 's');
+        em.appendChild(s);
+      }
+    });
+  }
+
+  langSwitch.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-lang]');
+    if (btn) setLang(btn.getAttribute('data-lang'));
+  });
+
+  var savedLang = null;
+  try { savedLang = localStorage.getItem('runx-lang'); } catch (e) {}
+  if (savedLang && savedLang !== 'en') {
+    setLang(savedLang); /* всередині викликає initStatements/initChaosLetters */
+  } else {
+    initStatements();
+    initChaosLetters();
+  }
+
+  /* footer RUNX letters rise */
+  (function () {
+    var logo = document.querySelector('.footer-logo');
+    var top = document.querySelector('.footer-top');
+    if (!logo || !top) return;
+    if (!reduced) {
+      var text = logo.textContent;
+      logo.textContent = '';
+      for (var i = 0; i < text.length; i++) {
+        var s = document.createElement('span');
+        s.className = 'fl';
+        s.style.setProperty('--fd', i);
+        s.textContent = text[i];
+        logo.appendChild(s);
+      }
+    }
+    if ('IntersectionObserver' in window && !reduced) {
+      var fio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            top.classList.add('is-visible');
+            fio.disconnect();
+          }
         });
-    });
+      }, { threshold: 0.25 });
+      fio.observe(top);
+    } else {
+      top.classList.add('is-visible');
+    }
+  })();
 
-    // Apply initial language (after DOM ready).
-    // HTML ships in EN — skip bulk text swap if the stored pref is EN too.
-    applyLang(currentLang, currentLang === 'en');
-
-    /* -------- CUSTOM CURSOR -------- */
-    const cursor = document.getElementById('cursor');
-    const cursorDot = document.getElementById('cursorDot');
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-    });
-
-    const animateCursor = () => {
-        const ease = 0.18;
-        cursorX += (mouseX - cursorX) * ease;
-        cursorY += (mouseY - cursorY) * ease;
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-        requestAnimationFrame(animateCursor);
-    };
-    animateCursor();
-
-    document.querySelectorAll('[data-cursor]').forEach(el => {
-        const type = el.getAttribute('data-cursor');
-        el.addEventListener('mouseenter', () => cursor.classList.add(`is-${type}`));
-        el.addEventListener('mouseleave', () => cursor.classList.remove(`is-${type}`));
-    });
-
-    document.addEventListener('mouseleave', () => {
-        cursor.style.opacity = '0';
-        cursorDot.style.opacity = '0';
-    });
-    document.addEventListener('mouseenter', () => {
-        cursor.style.opacity = '1';
-        cursorDot.style.opacity = '1';
-    });
-
-    /* -------- SCROLL PROGRESS + HEADER -------- */
-    const progress = document.getElementById('scrollProgress');
-    const header = document.getElementById('header');
-
-    const onScroll = () => {
-        const h = document.documentElement;
-        const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
-        progress.style.transform = `scaleX(${p})`;
-
-        if (h.scrollTop > 20) header.classList.add('scrolled');
-        else header.classList.remove('scrolled');
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    /* -------- REVEAL ON SCROLL -------- */
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-in');
-                io.unobserve(entry.target);
-            }
+  /* section-tag rules draw on view */
+  (function () {
+    var tags = document.querySelectorAll('.section-tag');
+    if ('IntersectionObserver' in window && !reduced) {
+      var tio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            tio.unobserve(entry.target);
+          }
         });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+      }, { threshold: 0.5 });
+      tags.forEach(function (t) { tio.observe(t); });
+    } else {
+      tags.forEach(function (t) { t.classList.add('is-visible'); });
+    }
+  })();
 
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  /* ============================================================
+     THEME (light / dark)
+     ============================================================ */
+  var themeToggle = document.getElementById('themeToggle');
+  var themeIcon = document.getElementById('themeIcon');
 
-    /* -------- PROJECTS IN-VIEW -------- */
-    const projectIO = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-in-view');
-            }
-        });
-    }, { threshold: 0.2 });
-    document.querySelectorAll('.project').forEach(el => projectIO.observe(el));
+  function applyThemeIcon() {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeIcon.innerHTML = dark ? '&#9788;' : '&#9789;'; /* ☼ / ☽ */
+  }
+  applyThemeIcon();
 
-    /* -------- COUNTER ANIMATIONS -------- */
-    const statEls = document.querySelectorAll('[data-count]');
-    const statIO = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const target = parseInt(el.getAttribute('data-count'), 10);
-                const duration = 1600;
-                const start = performance.now();
-                const tick = (now) => {
-                    const t = Math.min((now - start) / duration, 1);
-                    const eased = 1 - Math.pow(1 - t, 3);
-                    el.textContent = Math.round(target * eased);
-                    if (t < 1) requestAnimationFrame(tick);
-                };
-                requestAnimationFrame(tick);
-                statIO.unobserve(el);
-            }
-        });
-    }, { threshold: 0.4 });
-    statEls.forEach(el => statIO.observe(el));
+  themeToggle.addEventListener('click', function () {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (dark) {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    try {
+      localStorage.setItem('runx-theme', dark ? 'light' : 'dark');
+    } catch (e) {}
+    applyThemeIcon();
+  });
 
-    /* ==========================================================
-       PREVIEW ANIMATION — desktop: hover · mobile: in-viewport
-       Single rAF loop per preview. Same speed either mode.
-    ========================================================== */
-    const PREVIEW_DURATION = 9000; // ms for one top→bottom sweep
-    const IS_TOUCH = window.matchMedia('(hover: none)').matches ||
-                     window.matchMedia('(max-width: 900px)').matches;
+  /* ============================================================
+     Loader
+     ============================================================ */
+  var loader = document.getElementById('loader');
+  var loaderCount = document.getElementById('loaderCount');
 
-    document.querySelectorAll('.project-preview').forEach(wrap => {
-        const img = wrap.querySelector('img');
-        if (!img) return;
+  function finishLoad() {
+    if (document.body.classList.contains('is-loaded')) return;
+    document.body.classList.add('is-loaded');
+    if (loader) {
+      loader.classList.add('is-done');
+      setTimeout(function () { loader.remove(); }, 900);
+    }
+  }
 
-        let rafId = null;
-        let startTime = 0;
-        let active = false;
-        let leavingAnim = null;
+  if (reduced || !loader) {
+    finishLoad();
+  } else {
+    var n = 0;
+    var tick = setInterval(function () {
+      n = Math.min(100, n + Math.ceil(Math.random() * 14));
+      loaderCount.textContent = n;
+      if (n >= 100) {
+        clearInterval(tick);
+        setTimeout(finishLoad, 220);
+      }
+    }, 55);
+    /* safety: never trap the page behind the loader */
+    setTimeout(finishLoad, 2600);
+  }
 
-        let mx = 0, my = 0;
-        let tx = 0, ty = 0;
+  /* ============================================================
+     Header scroll state + progress bar
+     ============================================================ */
+  var header = document.getElementById('siteHeader');
+  var progressBar = document.getElementById('progressBar');
+  var hudPct = document.getElementById('hudPct');
+  var heroGrid = document.querySelector('.hero-grid-lines');
+  var onScroll = function () {
+    header.classList.toggle('is-scrolled', window.scrollY > 24);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? window.scrollY / h : 0;
+    progressBar.style.transform = 'scaleX(' + p + ')';
+    if (hudPct) {
+      hudPct.textContent = ('00' + Math.round(p * 100)).slice(-3);
+      var hud = document.getElementById('scrollHud');
+      if (hud) hud.classList.toggle('is-hidden', p > 0.96);
+    }
+    /* subtle parallax on the hero blueprint grid */
+    if (heroGrid && !reduced && window.scrollY < window.innerHeight * 1.5) {
+      heroGrid.style.transform = 'translate3d(0,' + (window.scrollY * 0.18) + 'px,0)';
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-        const setPos = (percent) => {
-            img.style.objectPosition = `50% ${percent.toFixed(2)}%`;
-        };
-        const setTransform = (x, y, scale = IS_TOUCH ? 1 : 1.015) => {
-            if (IS_TOUCH) return; // no parallax/scale on touch
-            wrap.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale})`;
-        };
-
-        const loop = (now) => {
-            if (!active) return;
-            const elapsed = now - startTime;
-            const phase = (elapsed % (PREVIEW_DURATION * 2)) / PREVIEW_DURATION;
-            const pos = phase <= 1 ? phase : 2 - phase;
-            setPos(pos * 100);
-
-            if (!IS_TOUCH) {
-                tx += (mx - tx) * 0.08;
-                ty += (my - ty) * 0.08;
-                setTransform(tx, ty);
-            }
-
-            rafId = requestAnimationFrame(loop);
-        };
-
-        const killLeaveAnim = () => {
-            if (leavingAnim) {
-                cancelAnimationFrame(leavingAnim);
-                leavingAnim = null;
-            }
-            img.style.transition = 'filter 0.5s ease';
-            wrap.style.transition = '';
-        };
-
-        const activate = () => {
-            killLeaveAnim();
-            setPos(0);
-            mx = 0; my = 0; tx = 0; ty = 0;
-            if (!IS_TOUCH) setTransform(0, 0);
-
-            void img.offsetHeight;
-
-            active = true;
-            startTime = performance.now();
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(loop);
-        };
-
-        const deactivate = () => {
-            active = false;
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = null;
-
-            const startPos = parseFloat(
-                (img.style.objectPosition || '50% 0%').split(' ')[1]
-            ) || 0;
-            const startTx = tx, startTy = ty;
-            const leaveStart = performance.now();
-            const LEAVE_DUR = 500;
-
-            const leaveTick = (now) => {
-                const t = Math.min((now - leaveStart) / LEAVE_DUR, 1);
-                const eased = 1 - Math.pow(1 - t, 3);
-                const p = startPos * (1 - eased);
-                setPos(p);
-                if (!IS_TOUCH) {
-                    const x = startTx * (1 - eased);
-                    const y = startTy * (1 - eased);
-                    setTransform(x, y, 1.015 - 0.015 * eased);
-                }
-                if (t < 1) {
-                    leavingAnim = requestAnimationFrame(leaveTick);
-                } else {
-                    leavingAnim = null;
-                    setPos(0);
-                    if (!IS_TOUCH) wrap.style.transform = '';
-                    tx = 0; ty = 0; mx = 0; my = 0;
-                }
-            };
-            leavingAnim = requestAnimationFrame(leaveTick);
-        };
-
-        if (IS_TOUCH) {
-            // Mobile: activate when preview is in viewport
-            const pIO = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) activate();
-                    else deactivate();
-                });
-            }, { threshold: 0.45 });
-            pIO.observe(wrap);
-        } else {
-            // Desktop: hover + mouse parallax
-            wrap.addEventListener('mouseenter', activate);
-            wrap.addEventListener('mousemove', (e) => {
-                const rect = wrap.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                mx = x * 6;
-                my = y * 6;
-            });
-            wrap.addEventListener('mouseleave', deactivate);
+  /* HUD active-section tracker */
+  (function () {
+    var hudSec = document.getElementById('hudSec');
+    if (!hudSec || !('IntersectionObserver' in window)) return;
+    var map = [
+      ['hero', '01 / HERO'],
+      ['overview', '02 / ABOUT'],
+      ['capabilities', '03 / CAPS'],
+      ['process', '04 / PROCESS'],
+      ['why', '05 / WHY'],
+      ['location', '06 / LOCATION'],
+      ['contact', '07 / CONTACT']
+    ];
+    var hio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          for (var i = 0; i < map.length; i++) {
+            if (map[i][0] === entry.target.id) hudSec.textContent = map[i][1];
+          }
         }
+      });
+    }, { rootMargin: '-42% 0px -42% 0px', threshold: 0 });
+    map.forEach(function (m) {
+      var el = document.getElementById(m[0]);
+      if (el) hio.observe(el);
     });
+  })();
 
-    /* -------- SCROLL TO TOP (mobile FAB) -------- */
-    const scrollTopBtn = document.getElementById('scrollTop');
-    if (scrollTopBtn) {
-        const toggleScrollTop = () => {
-            if (window.scrollY > 400) scrollTopBtn.classList.add('is-visible');
-            else scrollTopBtn.classList.remove('is-visible');
-        };
-        window.addEventListener('scroll', toggleScrollTop, { passive: true });
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        toggleScrollTop();
+  /* ============================================================
+     Mobile nav
+     ============================================================ */
+  var navToggle = document.getElementById('navToggle');
+  var mainNav = document.getElementById('mainNav');
+  navToggle.addEventListener('click', function () {
+    var open = mainNav.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  mainNav.addEventListener('click', function (e) {
+    if (e.target.closest('a')) {
+      mainNav.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
     }
+  });
 
-    /* -------- PROJECT MODAL -------- */
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
-    const modalNum = document.getElementById('modalNum');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalClose = document.getElementById('modalClose');
+  /* ============================================================
+     Reveal on scroll
+     ============================================================ */
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduced) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+  }
 
-    const openModal = (project) => {
-        const num = project.querySelector('.project-num').textContent;
-        const title = project.querySelector('.project-title').textContent;
-        const img = project.querySelector('.preview-wrap img');
+  /* ============================================================
+     Process line draw
+     ============================================================ */
+  var processGrid = document.getElementById('processGrid');
+  if (processGrid && 'IntersectionObserver' in window && !reduced) {
+    var pio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          processGrid.classList.add('is-active');
+          pio.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    pio.observe(processGrid);
+  } else if (processGrid) {
+    processGrid.classList.add('is-active');
+  }
 
-        modalNum.textContent = num;
-        modalTitle.textContent = title;
-        modalBody.innerHTML = '';
-        const fullImg = document.createElement('img');
-        fullImg.src = img.src;
-        fullImg.alt = title;
-        modalBody.appendChild(fullImg);
+  /* ============================================================
+     Text scramble (mono tags)
+     ============================================================ */
+  var CHARS = '#$%&/=?_—<>*01';
+  function scramble(el) {
+    var target = el.getAttribute('data-text') || el.textContent;
+    var frame = 0;
+    var total = Math.max(14, target.length);
+    var timer = setInterval(function () {
+      var current = el.getAttribute('data-text') || target;
+      var out = '';
+      for (var i = 0; i < current.length; i++) {
+        if (current[i] === ' ') { out += ' '; continue; }
+        var threshold = (frame / total) * current.length;
+        out += i < threshold ? current[i] : CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+      el.textContent = out;
+      frame += 1.4;
+      if (frame >= total + 2) { el.textContent = current; clearInterval(timer); }
+    }, 34);
+  }
+  var scrambles = document.querySelectorAll('.scramble');
+  if ('IntersectionObserver' in window && !reduced) {
+    var sio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          scramble(entry.target);
+          sio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    scrambles.forEach(function (el) { sio.observe(el); });
+  }
 
-        modal.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-    };
-
-    const closeModal = () => {
-        modal.classList.remove('is-open');
-        document.body.style.overflow = '';
-    };
-
-    document.querySelectorAll('.project-open, .project-preview').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const project = btn.closest('.project');
-            if (project) openModal(project);
-        });
-    });
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target === modalBody) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    /* -------- SMOOTH ANCHOR NAV -------- */
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', (e) => {
-            const target = a.getAttribute('href');
-            if (target === '#' || target.length < 2) return;
-            const el = document.querySelector(target);
-            if (el) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: el.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    /* -------- PARALLAX HERO -------- */
-    const heroGrid = document.querySelector('.hero-grid');
-    const heroGradient = document.querySelector('.hero-gradient');
-    window.addEventListener('scroll', () => {
-        const scroll = window.scrollY;
-        if (scroll > window.innerHeight) return;
-        if (heroGrid) heroGrid.style.transform = `translateY(${scroll * 0.3}px)`;
-        if (heroGradient) heroGradient.style.transform = `translateY(${scroll * 0.15}px)`;
+  /* ============================================================
+     Custom cursor
+     ============================================================ */
+  var dot = document.getElementById('cursorDot');
+  var ring = document.getElementById('cursorRing');
+  if (canHover && !reduced && dot && ring) {
+    var mx = -100, my = -100, rx = -100, ry = -100;
+    var shown = false;
+    window.addEventListener('pointermove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      if (!shown) {
+        shown = true;
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+        rx = mx; ry = my;
+      }
     }, { passive: true });
-
-    /* -------- MAGNETIC BUTTONS (not on previews — they have own transform) -------- */
-    document.querySelectorAll('.btn, .cta-btn, .project-open, .modal-close').forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-        });
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = '';
-        });
+    (function loop() {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      dot.style.transform = 'translate(' + (mx - 3) + 'px,' + (my - 3) + 'px)';
+      var half = ring.offsetWidth / 2;
+      ring.style.transform = 'translate(' + (rx - half) + 'px,' + (ry - half) + 'px)';
+      requestAnimationFrame(loop);
+    })();
+    /* delegated: працює і для елементів, перемальованих при зміні мови */
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest('[data-hover]')) ring.classList.add('is-hover');
     });
+    document.addEventListener('mouseout', function (e) {
+      if (e.target.closest('[data-hover]')) ring.classList.remove('is-hover');
+    });
+  }
 
-    /* -------- FORM SUBMIT -------- */
-    const form = document.getElementById('contactForm');
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = form.querySelector('button[type="submit"]');
-            const originalHTML = btn.innerHTML;
-            const doneText = currentLang === 'ua' ? 'Надіслано ✓' : 'Sent ✓';
-            btn.innerHTML = `<span>${doneText}</span>`;
-            btn.style.background = '#3FE074';
-            btn.style.color = '#0A0D14';
-            setTimeout(() => {
-                form.reset();
-                btn.innerHTML = originalHTML;
-                btn.style.background = '';
-                btn.style.color = '';
-            }, 3000);
-        });
+  /* ============================================================
+     Magnetic buttons
+     ============================================================ */
+  if (canHover && !reduced) {
+    document.querySelectorAll('.magnetic').forEach(function (el) {
+      var strength = 22;
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left - r.width / 2) / (r.width / 2);
+        var y = (e.clientY - r.top - r.height / 2) / (r.height / 2);
+        el.style.transform = 'translate(' + x * strength * 0.4 + 'px,' + y * strength * 0.3 + 'px)';
+      });
+      el.addEventListener('mouseleave', function () {
+        el.style.transition = 'transform .45s cubic-bezier(0.22,1,0.36,1)';
+        el.style.transform = 'translate(0,0)';
+        setTimeout(function () { el.style.transition = ''; }, 460);
+      });
+    });
+  }
+
+  /* ============================================================
+     Contact form (front-end only for now)
+     ============================================================ */
+  var form = document.getElementById('contactForm');
+  var confirmation = document.getElementById('formConfirmation');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
     }
+    /* TODO: підключити реальний endpoint (CRM / GHL webhook) */
+    confirmation.hidden = false;
+    form.querySelector('button[type="submit"]').disabled = true;
+    confirmation.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
+  });
 
-    /* -------- PREVENT BODY SCROLL WHEN MODAL OPEN -------- */
-    document.addEventListener('wheel', (e) => {
-        if (modal.classList.contains('is-open') && !modal.contains(e.target)) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-
-    /* -------- KEYBOARD NAVIGATION -------- */
-    document.addEventListener('keydown', (e) => {
-        if (modal.classList.contains('is-open')) return;
-        const tag = e.target.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-
-        if (e.key === 'j' || e.key === 'J') {
-            window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
-        }
-        if (e.key === 'k' || e.key === 'K') {
-            window.scrollBy({ top: -window.innerHeight * 0.8, behavior: 'smooth' });
-        }
-        if (e.key === 'g' || e.key === 'G') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
-
+  /* ============================================================
+     Footer year
+     ============================================================ */
+  document.getElementById('year').textContent = new Date().getFullYear();
 })();
